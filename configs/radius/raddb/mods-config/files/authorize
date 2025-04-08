@@ -1,0 +1,7 @@
+DEFAULT         Auth-Type := Accept
+                Alc-Subsc-ID-Str = "%{User-Name}",
+                Alc-Subsc-Prof-Str = "SUB-PROFILE-1",
+                Alc-SLA-Prof-Str = "SLA-PROFILE-1",
+                Framed-Pool = "V4Pool",
+                Alc-SLAAC-IPv6-Pool = "V6Pool",
+                Alc-Delegated-IPv6-Pool = "V6Pool"

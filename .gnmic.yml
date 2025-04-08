@@ -1,0 +1,6 @@
+username: admin
+password: admin
+port: 57400
+timeout: 5s
+insecure: true
+encoding: JSON_IETF

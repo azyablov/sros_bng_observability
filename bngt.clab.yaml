@@ -1,0 +1,203 @@
+name: sros_bngt
+
+mgmt:
+  network: bngt
+  ipv4-subnet: 172.20.20.0/24
+
+topology:
+  nodes:
+    # SROS NEs
+    agg:
+      kind: nokia_sros
+      image: registry.srlinux.dev/pub/vr-sros:24.7.R1
+      type: sr-1
+      license: license.txt
+      startup-config: configs/ne/agg.txt
+      mgmt-ipv4: 172.20.20.21
+      group: ne
+    bng1:
+      kind: nokia_sros
+      image: registry.srlinux.dev/pub/vr-sros:24.7.R1
+      type: sr-1s
+      license: license.txt
+      mgmt-ipv4: 172.20.20.11
+      startup-config: configs/ne/bng1.txt 
+      group: ne     
+    bng2:
+      kind: nokia_sros
+      image: registry.srlinux.dev/pub/vr-sros:24.7.R1
+      type: sr-1s
+      license: license.txt
+      mgmt-ipv4: 172.20.20.12
+      startup-config: configs/ne/bng2.txt
+      group: ne
+    core:
+      kind: nokia_sros
+      image: registry.srlinux.dev/pub/vr-sros:24.7.R1
+      type: sr-1s
+      license: license.txt
+      mgmt-ipv4: 172.20.20.22
+      startup-config: configs/ne/core.txt
+      group: ne
+    
+    # Infra services
+    radius:
+      kind: linux
+      image: harbor.nice.nokia.net/docker/freeradius/freeradius-server:3.2.3
+      cmd: -X
+      mgmt-ipv4: 172.20.20.111
+      binds:
+        - configs/radius/raddb/clients.conf:/etc/raddb/clients.conf
+        - configs/radius/raddb/mods-config/files/authorize:/etc/raddb/mods-config/files/authorize
+        - logs/radius:/var/log/radius
+      startup-delay: 30
+      restart-policy: unless-stopped
+    # Run to generate traffic: bngblaster -C pppoe.json -I -l dhcp
+    bngblaster:
+      kind: linux
+      image: azyablov/bng-blaster:latest
+      binds:
+        - configs/bngblaster/pppoe.json:/pppoe.json
+      startup-delay: 30
+      restart-policy: unless-stopped
+    # syslog-ng - collect syslog
+    tel-syslog:
+      kind: linux
+      image: harbor.nice.nokia.net/docker/linuxserver/syslog-ng:4.8.1-r1-ls153
+      binds:
+        - /etc/localtime:/etc/localtime:ro
+        - configs/syslog-ng.conf:/config/syslog-ng.conf
+        - logs/syslog:/var/log
+      env:
+        PUID: "0"
+        PGID: "0"
+      mgmt-ipv4: 172.20.20.31
+      startup-delay: 45
+      restart-policy: unless-stopped
+    
+    # Logging stack
+    # promtail - ingest syslog messages in Loki
+    tel-pt:
+      kind: linux
+      image: grafana/promtail:latest
+      mgmt-ipv4: 172.20.20.32
+      binds:
+        - /etc/localtime:/etc/localtime:ro
+        - configs/promtail.yml:/etc/promtail/config.yml
+      cmd: -config.file=/etc/promtail/config.yml
+      startup-delay: 30
+      group: state
+      restart-policy: unless-stopped
+    # fluentbit - ingest state data in Loki
+    tel-fb:
+      kind: linux
+      image: cr.fluentbit.io/fluent/fluent-bit:latest
+      mgmt-ipv4: 172.20.20.33
+      binds:
+        - configs/fluent-bit.ini:/fluent-bit/etc/fluent-bit.conf
+      startup-delay: 30
+      group: state
+      restart-policy: unless-stopped
+    # Loki - log and state data
+    tel-loki:
+      kind: linux
+      image: grafana/loki:latest
+      mgmt-ipv4: 172.20.20.34
+      binds:
+        - configs/loki.yml:/etc/loki/local-config.yaml
+        - lokidata:/tmp/loki
+      cmd: -config.file=/etc/loki/local-config.yaml
+      startup-delay: 15
+      group: state
+      restart-policy: unless-stopped
+
+    # Alertmanager with Telegram config, pls consider to update telegram_bot.token!
+    tel-am:
+      kind: linux
+      image: quay.io/prometheus/alertmanager:latest
+      mgmt-ipv4: 172.20.20.35
+      binds:
+        - configs/alertmanager.yml:/alertmanager.yml
+        - configs/telegram_bot.token:/telegram_bot.token
+      cmd: --config.file=/alertmanager.yml
+      startup-delay: 60
+      restart-policy: unless-stopped
+    
+    # gNMIc to collect state data
+    gnmic-state:
+      kind: linux
+      mgmt-ipv4: 172.20.20.41
+      image: harbor.nice.nokia.net/ghcr/openconfig/gnmic:latest
+      binds:
+        - configs/gnmic/gnmic-state.yml:/gnmic-config.yml:ro
+      cmd: sub --config /gnmic-config.yml --log
+      group: state
+      startup-delay: 120
+
+
+    # Telemetry stack
+    # smokeping to check MGMT inf availability
+    tel-sping:
+      kind: linux
+      image: quay.io/superq/smokeping-prober:latest
+      mgmt-ipv4: 172.20.20.36
+      binds:
+        - configs/smokeping.yml:/smokeping.yml
+        - /etc/hosts:/etc/hosts:ro
+      cmd: --config.file=/smokeping.yml
+      env:
+        GOMAXPROCS: "1"
+      startup-delay: 60
+      group: telemetry
+      restart-policy: unless-stopped
+
+    # gNMIc to collect telemetry (metrics)
+    gnmic-metrics:
+      kind: linux
+      mgmt-ipv4: 172.20.20.42
+      image: harbor.nice.nokia.net/ghcr/openconfig/gnmic:latest
+      binds:
+        - configs/gnmic/gnmic-metrics.yml:/gnmic-config.yml:ro
+      cmd: sub --config /gnmic-config.yml --log
+      group: telemetry
+      startup-delay: 60
+    tel-prom:
+      kind: linux
+      image: quay.io/prometheus/prometheus:latest
+      mgmt-ipv4: 172.20.20.37
+      binds:
+        - configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+        - configs/prometheus/recording_rules/:/etc/prometheus/rules/:ro
+        - /etc/localtime:/etc/localtime:ro
+        - promdata:/prometheus  # Replace with a path to simulate prometheus-data volume
+      cmd: --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus
+      group: telemetry
+      startup-delay: 60
+
+    # grafana
+    tel-graf:
+      kind: linux
+      image: grafana/grafana:latest
+      mgmt-ipv4: 172.20.20.38
+      binds:
+        - configs/grafana/provisioning/datasources/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
+        - configs/grafana/provisioning/dashboards/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
+        - configs/grafana/dashboards:/var/lib/grafana/dashboards
+      env:
+        GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+        GF_AUTH_ANONYMOUS_ENABLED: "true"
+        GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+        GF_AUTH_ANONYMOUS: "true"
+        http_proxy: http://usdal1a-proxy.americas.nsn-net.net:8080
+      startup-delay: 60
+
+  links:
+    - endpoints: ["bngblaster:eth1", "agg:1/1/1"]
+    - endpoints: ["bng1:1/1/1", "agg:1/1/2"]
+    - endpoints: ["bng2:1/1/1", "agg:1/1/3"]
+    - endpoints: ["bng1:1/1/2", "core:1/1/1"]
+    - endpoints: ["bng2:1/1/2", "core:1/1/2"]
+    - endpoints: ["bng1:1/1/3", "bng2:1/1/3"]
+    - endpoints: ["bngblaster:eth2", "core:1/1/3"]
+    - endpoints: ["radius:eth1", "core:1/1/4"]
+

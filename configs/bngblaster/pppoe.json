@@ -1,0 +1,90 @@
+{
+    "interfaces": {
+        "network": {
+            "interface": "eth2",
+            "address": "111.11.0.1/31",
+            "gateway": "111.11.0.0",
+            "address-ipv6": "2001:111:11::2/64",
+            "gateway-ipv6": "2001:111:11::1"
+        },
+        "access": [
+            {
+                "__comment__": "PPPoE Client",
+                "interface": "eth1",
+                "type": "pppoe",
+                "vlan-mode": "N:1",
+	              "outer-vlan-min": 101,
+               "outer-vlan-max": 101,
+                "inner-vlan-min": 0,
+	              "inner-vlan-max": 0,
+                "authentication-protocol": "CHAP",
+                "stream-group-id": 1
+            }
+        ]
+    },
+    "sessions": {
+        "count": 10,
+
+        "max-outstanding": 10,
+        "start-rate": 5,
+        "stop-rate": 5
+    },  
+    "pppoe": {
+        "reconnect": true,
+        "discovery-timeout": 3,
+        "discovery-retry": 10
+    },
+    "ppp": {
+        "mru": 1492,
+        "authentication": {
+            "username": "user{session-global}@nokia.com",
+            "password": "test",
+            "timeout": 5,
+            "retry": 30
+        },
+        "lcp": {
+            "conf-request-timeout": 1,
+            "conf-request-retry": 10,
+            "keepalive-interval": 30,
+            "keepalive-retry": 3
+        },
+        "ipcp": {
+            "enable": true,
+            "request-ip": true,
+            "request-dns1": true,
+            "request-dns2": true,
+            "conf-request-timeout": 1,
+            "conf-request-retry": 10
+        },
+        "ip6cp": {
+            "enable": true,
+            "conf-request-timeout": 1,
+            "conf-request-retry": 10
+        }
+    },
+    "dhcpv6": {
+        "enable": true,        
+        "ia-pd": true,
+        "ia-na": true
+    },
+    "access-line": {
+        "agent-remote-id": "RemoteID.{session-global}",
+        "agent-circuit-id": "1/1/1-OLT-NOKIA-1"
+
+    },
+    "session-traffic": {
+        "ipv4-pps": 1,
+        "ipv6-pps": 1,
+        "ipv6pd-pps": 1
+    }, 
+
+    "streams": [
+        {
+            "name": "BestEffort",
+            "stream-group-id": 1,
+            "type": "ipv4",
+            "direction": "both",
+            "pps": 20
+        }
+    ]
+}

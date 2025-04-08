@@ -1,0 +1,23 @@
+apiVersion: 1
+datasources:
+  - name: Prometheus
+    type: prometheus
+    uid: DS_PROMETHEUS
+    access: proxy
+    url: http://tel-prom:9090
+    jsonData:
+      httpMethod: POST
+      timeout: 60
+      manageAlerts: false
+      prometheusType: Prometheus
+      cacheLevel: 'High'
+      disableRecordingRules: false
+      incrementalQueryOverlapWindow: 10m
+  - name: Loki
+    type: loki
+    uid: DS_LOKI
+    access: proxy
+    url: http://tel-loki:3100
+    jsonData:
+      timeout: 60
+      maxLines: 1000

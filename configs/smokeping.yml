@@ -1,0 +1,13 @@
+---
+targets:
+- hosts:
+  - clab-sros_bngt-agg
+  - clab-sros_bngt-bng1
+  - clab-sros_bngt-bng2
+  - clab-sros_bngt-core
+  - clab-sros_bngt-radius
+  interval: 10s # Duration, Default 1s.
+  network: ip4 # One of ip, ip4, ip6. Default: ip (automatic IPv4/IPv6)
+  protocol: icmp # One of icmp, udp. Default: icmp (Requires privileged operation)
+  size: 80 # Packet data size in bytes. Default 56 (Range: 24 - 65535)
+  #source: None # Souce IP address to use. Default: None (automatic selection)

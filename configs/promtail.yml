@@ -1,0 +1,35 @@
+clients:
+  - url: http://tel-loki:3100/loki/api/v1/push
+
+scrape_configs:
+- job_name: syslog
+  pipeline_stages:
+  - regex:
+      expression: '^(?P<seq>\d+)\s(?P<timestamp>\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\s(?P<tz>\w+)\s(?P<severity>\w+):\s(?P<application>\w+)\s#(?P<event_id>\d+)\s(?P<vrtr_name>\w+)\s(?P<message>.*)$'
+  - labels:
+      seq:
+      timestamp:
+      tz:
+      severity:
+      application:
+      event_id:
+      vrtr_name:
+  - output:
+      source: message
+  syslog:
+    listen_address: 0.0.0.0:1514
+    listen_protocol: tcp
+    idle_timeout: 300s
+    syslog_format: rfc5424
+    label_structured_data: yes
+    labels:
+      job: "syslog"
+  relabel_configs:
+    - source_labels: ['__syslog_message_hostname']
+      target_label: 'source'
+    - source_labels: ['__syslog_message_severity']
+      target_label: 'level'
+    - source_labels: ['__syslog_message_app_name']
+      target_label: 'application'
+    - source_labels: ['__syslog_message_facility']
+      target_label: 'facility'

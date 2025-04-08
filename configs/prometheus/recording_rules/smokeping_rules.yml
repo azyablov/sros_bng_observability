@@ -1,0 +1,11 @@
+groups: 
+- name: smokeping_rules
+  interval: 60s
+  rules:
+  - record: smokeping_rules:ping_avg_delay_msec_1min
+    expr: |
+      (
+        rate(smokeping_response_duration_seconds_sum{source!="None"}[1m])
+        /
+        rate(smokeping_response_duration_seconds_count{source!="None"}[1m])
+      ) * 1000

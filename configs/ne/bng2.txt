@@ -1,0 +1,1015 @@
+# TiMOS-B-24.7.R1 both/x86_64 Nokia 7750 SR Copyright (c) 2000-2024 Nokia.
+# All rights reserved. All use subject to applicable license agreements.
+# Built on Thu Jul 11 15:05:03 PDT 2024 by builder in /builds/247B/R1/panos/main/sros
+# Configuration format version 24.7 revision 0
+
+# Generated 2025-04-07T21:50:10.1Z by admin from 172.31.255.29
+# Commit ID 2
+#   Committed 2025-04-07T21:45:59.0Z by admin (MD-CLI) from 172.31.255.29
+
+configure {
+    aaa {
+        radius {
+            server-policy "FREERADIUS" {
+                servers {
+                    router-instance "management"
+                    server 1 {
+                        server-name "FREERADIUS"
+                    }
+                }
+            }
+        }
+    }
+    card 1 {
+        card-type xcm-1s
+        mda 1 {
+            mda-type s36-100gb-qsfp28
+            xconnect {
+                mac 1 {
+                    loopback 1 {
+                        bandwidth 40
+                    }
+                }
+            }
+        }
+    }
+    chassis router chassis-number 1 {
+        power-shelf 1 {
+            power-shelf-type ps-a4-shelf-dc
+            power-module 1 {
+                power-module-type ps-a-dc-6000
+            }
+            power-module 2 {
+                power-module-type ps-a-dc-6000
+            }
+            power-module 3 {
+                power-module-type ps-a-dc-6000
+            }
+            power-module 4 {
+                power-module-type ps-a-dc-6000
+            }
+        }
+    }
+    log {
+        filter "1001" {
+            named-entry "10" {
+                description "Collect only events of major severity or higher"
+                action forward
+                match {
+                    severity {
+                        gte major
+                    }
+                }
+            }
+        }
+        log-id "10" {
+            admin-state enable
+            source {
+                main true
+                security true
+                change true
+                debug true
+            }
+            destination {
+                syslog "promtail"
+            }
+        }
+        log-id "99" {
+            description "Default System Log"
+            source {
+                main true
+            }
+            destination {
+                memory {
+                    max-entries 500
+                }
+            }
+        }
+        log-id "100" {
+            description "Default Serious Errors Log"
+            filter "1001"
+            source {
+                main true
+            }
+            destination {
+                memory {
+                    max-entries 500
+                }
+            }
+        }
+        syslog "promtail" {
+            address 172.20.20.31
+            facility local7
+            severity info
+            port 1514
+            hostname {
+                use-system-name { }
+            }
+        }
+    }
+    multicast-management {
+        chassis-level {
+            per-mcast-plane-capacity {
+                total-capacity dynamic
+                mcast-capacity {
+                    primary-percentage 87.5
+                    secondary-percentage 87.5
+                }
+                redundant-mcast-capacity {
+                    primary-percentage 87.5
+                    secondary-percentage 87.5
+                }
+            }
+        }
+    }
+    policy-options {
+        community "BNG" {
+            member "target:3000:10001" { }
+        }
+        prefix-list "BNG_PREF" {
+            prefix 10.128.0.0/22 type exact {
+            }
+            prefix 2001:db9::/32 type exact {
+            }
+            prefix 2001:dba::/32 type exact {
+            }
+        }
+        policy-statement "VPRN_EXPORT" {
+            entry 10 {
+                from {
+                    prefix-list ["BNG_PREF"]
+                    state srrp-master
+                }
+                action {
+                    action-type accept
+                    local-preference 150
+                    community {
+                        add ["BNG"]
+                    }
+                }
+            }
+            entry 20 {
+                from {
+                    prefix-list ["BNG_PREF"]
+                    state srrp-non-master
+                }
+                action {
+                    action-type accept
+                    community {
+                        add ["BNG"]
+                    }
+                }
+            }
+        }
+    }
+    port pxc-3.a {
+        admin-state enable
+    }
+    port pxc-3.b {
+        admin-state enable
+    }
+    port 1/1/c1 {
+        admin-state enable
+        connector {
+            breakout c1-100g
+        }
+    }
+    port 1/1/c1/1 {
+        admin-state enable
+        ethernet {
+            mode hybrid
+            encap-type dot1q
+        }
+    }
+    port 1/1/c2 {
+        admin-state enable
+        connector {
+            breakout c1-100g
+        }
+    }
+    port 1/1/c2/1 {
+        admin-state enable
+        ethernet {
+            mode network
+            encap-type null
+        }
+    }
+    port 1/1/c3 {
+        admin-state enable
+        connector {
+            breakout c1-100g
+        }
+    }
+    port 1/1/c3/1 {
+        admin-state enable
+        ethernet {
+            mode network
+            encap-type null
+        }
+    }
+    port 1/1/m1/1 {
+        admin-state enable
+    }
+    port-xc {
+        pxc 3 {
+            admin-state enable
+            description "PXC method"
+            port-id 1/1/m1/1
+        }
+    }
+    qos {
+        sap-ingress "INGRESS_QOS" {
+            policy-id 2
+            default-fc "be"
+            policer 1 {
+                rate {
+                    pir 10000
+                    cir 0
+                }
+            }
+        }
+        sap-egress "EGRESS_QOS" {
+            policy-id 2
+            queue 1 {
+                rate {
+                    pir 10000
+                    cir 0
+                }
+            }
+        }
+    }
+    redundancy {
+        multi-chassis {
+            peer 10.0.0.2 {
+                admin-state enable
+                sync {
+                    admin-state enable
+                    local-dhcp-server true
+                    srrp true
+                    sub-mgmt {
+                        ipoe true
+                        pppoe true
+                    }
+                    tags {
+                        port pxc-3.b {
+                            sync-tag "BNG"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    router "Base" {
+        autonomous-system 3000
+        interface "AGG" {
+            port 1/1/c1/1:0
+            ipv4 {
+                primary {
+                    address 10.1.3.3
+                    prefix-length 24
+                }
+            }
+        }
+        interface "CORE" {
+            port 1/1/c2/1
+            ipv4 {
+                primary {
+                    address 10.3.4.3
+                    prefix-length 24
+                }
+            }
+        }
+        interface "PEER_BNG" {
+            port 1/1/c3/1
+            ipv4 {
+                primary {
+                    address 10.2.3.3
+                    prefix-length 24
+                }
+            }
+        }
+        interface "system" {
+            admin-state enable
+            ipv4 {
+                primary {
+                    address 10.0.0.3
+                    prefix-length 32
+                }
+            }
+        }
+        mpls-labels {
+            sr-labels {
+                start 20000
+                end 20099
+            }
+        }
+        bgp {
+            admin-state enable
+            rapid-withdrawal true
+            rapid-update {
+                vpn-ipv4 true
+                vpn-ipv6 true
+                evpn true
+            }
+            group "INTERNAL" {
+                peer-as 3000
+                family {
+                    vpn-ipv4 true
+                    vpn-ipv6 true
+                    evpn true
+                }
+                local-as {
+                    as-number 3000
+                }
+            }
+            neighbor "10.0.0.4" {
+                group "INTERNAL"
+            }
+        }
+        isis 0 {
+            admin-state enable
+            advertise-router-capability as
+            level-capability 2
+            area-address [49.0001]
+            segment-routing {
+                admin-state enable
+                prefix-sid-range {
+                    global
+                }
+            }
+            interface "AGG" {
+                interface-type point-to-point
+            }
+            interface "CORE" {
+                interface-type point-to-point
+            }
+            interface "PEER_BNG" {
+                interface-type point-to-point
+            }
+            interface "system" {
+                passive true
+                ipv4-node-sid {
+                    index 3
+                }
+            }
+        }
+        ldp {
+            admin-state enable
+        }
+    }
+    router "management" {
+        radius {
+            server "FREERADIUS" {
+                address 172.20.20.111
+                secret "kF7xSGHTx85cQ3cpvISo/o+C0rmqpVkipg== hash2"
+                accept-coa true
+            }
+        }
+    }
+    service {
+        system {
+            bgp-auto-rd-range {
+                ip-address 10.0.0.3
+                community-value {
+                    start 1000
+                    end 50000
+                }
+            }
+        }
+        sdp 2 {
+            admin-state enable
+            delivery-type mpls
+            sr-isis true
+            far-end {
+                ip-address 10.0.0.2
+            }
+        }
+        vpls "EVPN-SRRP-9991" {
+            admin-state enable
+            service-id 9991
+            customer "1"
+            service-mtu 1514
+            fdb {
+                table {
+                    size 1000
+                }
+            }
+            bgp 1 {
+                route-distinguisher auto-rd
+            }
+            bgp-evpn {
+                evi 9991
+                mpls 1 {
+                    admin-state enable
+                    auto-bind-tunnel {
+                        resolution filter
+                        resolution-filter {
+                            sr-isis true
+                        }
+                    }
+                }
+            }
+            sap pxc-3.a:4000 {
+                admin-state enable
+            }
+        }
+        vpls "EVPN-USER-DATA-10001" {
+            admin-state enable
+            service-id 10001
+            customer "1"
+            service-mtu 1514
+            fdb {
+                table {
+                    size 32000
+                }
+            }
+            bgp 1 {
+                route-distinguisher auto-rd
+            }
+            bgp-evpn {
+                evi 10001
+                mpls 1 {
+                    admin-state enable
+                    auto-bind-tunnel {
+                        resolution filter
+                        resolution-filter {
+                            sr-isis true
+                        }
+                    }
+                }
+            }
+            sap pxc-3.a:100 {
+                admin-state enable
+            }
+        }
+        vprn "BNG-INTERNET" {
+            admin-state enable
+            service-id 100
+            customer "1"
+            bgp-ipvpn {
+                mpls {
+                    admin-state enable
+                    route-distinguisher auto-rd
+                    vrf-target {
+                        community "target:3000:10001"
+                    }
+                    vrf-export {
+                        policy ["VPRN_EXPORT"]
+                    }
+                    auto-bind-tunnel {
+                        resolution filter
+                        resolution-filter {
+                            sr-isis true
+                        }
+                    }
+                }
+            }
+            interface "loopback-1" {
+                admin-state enable
+                loopback true
+                ipv4 {
+                    local-dhcp-server "V4_SERVER"
+                    primary {
+                        address 192.168.0.1
+                        prefix-length 32
+                    }
+                }
+                ipv6 {
+                    local-dhcp-server "V6_SERVER"
+                    address 2001:db8::1 {
+                        prefix-length 128
+                    }
+                }
+            }
+            redundant-interface "REDUNDANT" {
+                admin-state enable
+                spoke-sdp 2:99 {
+                }
+                ipv4 {
+                    primary {
+                        address 10.0.99.1
+                        prefix-length 31
+                    }
+                }
+            }
+            dhcp-server {
+                dhcpv4 "V4_SERVER" {
+                    admin-state enable
+                    pool-selection {
+                        use-pool-from-client {
+                        }
+                    }
+                    failover {
+                        admin-state enable
+                        peer 10.0.0.2 {
+                            sync-tag "DHCPv4"
+                        }
+                    }
+                    pool "V4Pool" {
+                        subnet 10.128.0.0/22 {
+                            address-range 10.128.0.4 end 10.128.0.254 {
+                                failover-control-type access-driven
+                            }
+                        }
+                    }
+                }
+                dhcpv6 "V6_SERVER" {
+                    admin-state enable
+                    pool-selection {
+                        use-pool-from-client {
+                        }
+                    }
+                    pool "V6Pool" {
+                        delegated-prefix {
+                            minimum 56
+                        }
+                        prefix 2001:db9::/32 {
+                            failover-control-type access-driven
+                            preferred-lifetime 36000
+                            renew-time 18000
+                            rebind-time 28800
+                            prefix-type {
+                                pd true
+                                wan-host false
+                            }
+                        }
+                        prefix 2001:dba::/32 {
+                            failover-control-type access-driven
+                            preferred-lifetime 36000
+                            renew-time 18000
+                            rebind-time 28800
+                            prefix-type {
+                                pd false
+                                wan-host true
+                            }
+                        }
+                    }
+                }
+            }
+            subscriber-interface "SUB" {
+                admin-state enable
+                ipv4 {
+                    address 10.128.0.3 {
+                        prefix-length 22
+                        gateway 10.128.0.1
+                        track-srrp 1
+                    }
+                }
+                ipv6 {
+                    delegated-prefix-length variable
+                    prefix 2001:db9::/32 {
+                        track-srrp 1
+                        host-type pd
+                    }
+                    prefix 2001:dba::/32 {
+                        track-srrp 1
+                        host-type wan
+                    }
+                    link-local-address {
+                        address fe80::b696:ffff:fe00:0
+                    }
+                }
+                group-interface "GRP_1" {
+                    radius-auth-policy "RAD_AUTH"
+                    redundant-interface "REDUNDANT"
+                    ipv4 {
+                        dhcp {
+                            admin-state enable
+                            server [192.168.0.1]
+                            trusted true
+                            gi-address 10.128.0.1
+                            match-circuit-id true
+                            proxy-server {
+                                admin-state enable
+                                emulated-server 10.128.0.1
+                            }
+                            option-82 {
+                                action keep
+                                vendor-specific-option {
+                                    pool-name true
+                                }
+                            }
+                            lease-populate {
+                                max-leases 128000
+                            }
+                            client-applications {
+                                dhcp true
+                                ppp true
+                            }
+                        }
+                    }
+                    ipv6 {
+                        dhcp6 {
+                            relay {
+                                admin-state enable
+                                server ["2001:db8::1"]
+                                client-applications {
+                                    dhcp true
+                                    ppp true
+                                }
+                            }
+                        }
+                        router-advertisements {
+                            admin-state enable
+                            options {
+                                managed-configuration true
+                                mtu 1500
+                                other-stateful-configuration true
+                            }
+                        }
+                    }
+                    pppoe {
+                        admin-state enable
+                        session-limit 10000
+                        sap-session-limit 10000
+                    }
+                    local-address-assignment {
+                        admin-state enable
+                        ipv6 {
+                            server "V6_SERVER"
+                            client-applications {
+                                ppp-slaac true
+                            }
+                        }
+                    }
+                    srrp 1 {
+                        admin-state enable
+                        message-path pxc-3.b:4000
+                    }
+                    sap pxc-3.b:100 {
+                        admin-state enable
+                        sub-sla-mgmt {
+                            admin-state enable
+                            sub-ident-policy "SUB_IDENT"
+                            subscriber-limit no-limit
+                        }
+                    }
+                    sap pxc-3.b:4000 {
+                        admin-state enable
+                    }
+                }
+            }
+        }
+    }
+    subscriber-mgmt {
+        sub-profile "SUB-PROFILE-1" {
+        }
+        sla-profile "SLA-PROFILE-1" {
+            egress {
+                qos {
+                    sap-egress {
+                        policy-name "EGRESS_QOS"
+                    }
+                }
+            }
+            ingress {
+                qos {
+                    sap-ingress {
+                        policy-name "INGRESS_QOS"
+                    }
+                }
+            }
+        }
+        sub-ident-policy "SUB_IDENT" {
+            sla-profile-map {
+                use-direct-map-as-default true
+            }
+            sub-profile-map {
+                use-direct-map-as-default true
+            }
+        }
+        radius-authentication-policy "RAD_AUTH" {
+            pppoe-access-method pap-chap
+            radius-server-policy "FREERADIUS"
+            user-name {
+                format mac
+            }
+            include-radius-attribute {
+                called-station-id true
+                circuit-id true
+                mac-address true
+                nas-identifier true
+                pppoe-service-name true
+                remote-id true
+                acct-session-id {
+                    type session
+                }
+                calling-station-id {
+                    type mac
+                }
+                nas-port-id {
+                    suffix circuit-id
+                }
+                nas-port-type {
+                    type rfc-aligned
+                }
+            }
+        }
+    }
+    system {
+        name "BNG2"
+        grpc {
+            admin-state enable
+            allow-unsecure-connection
+        }
+        management-interface {
+            configuration-mode model-driven
+            cli {
+                md-cli {
+                    auto-config-save true
+                }
+            }
+            netconf {
+                listen {
+                    admin-state enable
+                }
+            }
+            remote-management {
+                allow-unsecure-connection
+            }
+            yang-modules {
+                nokia-combined-modules true
+            }
+        }
+        bluetooth {
+            advertising-timeout 30
+        }
+        security {
+            aaa {
+                local-profiles {
+                    profile "administrative" {
+                        default-action permit-all
+                        entry 10 {
+                            match "configure system security"
+                            action permit
+                        }
+                        entry 20 {
+                            match "show system security"
+                            action permit
+                        }
+                        entry 30 {
+                            match "tools perform security"
+                            action permit
+                        }
+                        entry 40 {
+                            match "tools dump security"
+                            action permit
+                        }
+                        entry 42 {
+                            match "tools dump system security"
+                            action permit
+                        }
+                        entry 50 {
+                            match "admin system security"
+                            action permit
+                        }
+                        entry 100 {
+                            match "configure li"
+                            action deny
+                        }
+                        entry 110 {
+                            match "show li"
+                            action deny
+                        }
+                        entry 111 {
+                            match "clear li"
+                            action deny
+                        }
+                        entry 112 {
+                            match "tools dump li"
+                            action deny
+                        }
+                        netconf {
+                            base-op-authorization {
+                                action true
+                                cancel-commit true
+                                close-session true
+                                commit true
+                                copy-config true
+                                create-subscription true
+                                delete-config true
+                                discard-changes true
+                                edit-config true
+                                get true
+                                get-config true
+                                get-data true
+                                get-schema true
+                                kill-session true
+                                lock true
+                                validate true
+                            }
+                        }
+                    }
+                    profile "default" {
+                        entry 10 {
+                            match "exec"
+                            action permit
+                        }
+                        entry 20 {
+                            match "exit"
+                            action permit
+                        }
+                        entry 30 {
+                            match "help"
+                            action permit
+                        }
+                        entry 40 {
+                            match "logout"
+                            action permit
+                        }
+                        entry 50 {
+                            match "password"
+                            action permit
+                        }
+                        entry 60 {
+                            match "show config"
+                            action deny
+                        }
+                        entry 65 {
+                            match "show li"
+                            action deny
+                        }
+                        entry 66 {
+                            match "clear li"
+                            action deny
+                        }
+                        entry 67 {
+                            match "tools dump li"
+                            action deny
+                        }
+                        entry 68 {
+                            match "state li"
+                            action deny
+                        }
+                        entry 70 {
+                            match "show"
+                            action permit
+                        }
+                        entry 75 {
+                            match "state"
+                            action permit
+                        }
+                        entry 80 {
+                            match "enable-admin"
+                            action permit
+                        }
+                        entry 90 {
+                            match "enable"
+                            action permit
+                        }
+                        entry 100 {
+                            match "configure li"
+                            action deny
+                        }
+                    }
+                }
+            }
+            ssh {
+                server-cipher-list-v2 {
+                    cipher 190 {
+                        name aes256-ctr
+                    }
+                    cipher 192 {
+                        name aes192-ctr
+                    }
+                    cipher 194 {
+                        name aes128-ctr
+                    }
+                    cipher 200 {
+                        name aes128-cbc
+                    }
+                    cipher 205 {
+                        name 3des-cbc
+                    }
+                    cipher 225 {
+                        name aes192-cbc
+                    }
+                    cipher 230 {
+                        name aes256-cbc
+                    }
+                }
+                client-cipher-list-v2 {
+                    cipher 190 {
+                        name aes256-ctr
+                    }
+                    cipher 192 {
+                        name aes192-ctr
+                    }
+                    cipher 194 {
+                        name aes128-ctr
+                    }
+                    cipher 200 {
+                        name aes128-cbc
+                    }
+                    cipher 205 {
+                        name 3des-cbc
+                    }
+                    cipher 225 {
+                        name aes192-cbc
+                    }
+                    cipher 230 {
+                        name aes256-cbc
+                    }
+                }
+                server-mac-list-v2 {
+                    mac 200 {
+                        name hmac-sha2-512
+                    }
+                    mac 210 {
+                        name hmac-sha2-256
+                    }
+                    mac 215 {
+                        name hmac-sha1
+                    }
+                    mac 220 {
+                        name hmac-sha1-96
+                    }
+                    mac 225 {
+                        name hmac-md5
+                    }
+                    mac 240 {
+                        name hmac-md5-96
+                    }
+                }
+                client-mac-list-v2 {
+                    mac 200 {
+                        name hmac-sha2-512
+                    }
+                    mac 210 {
+                        name hmac-sha2-256
+                    }
+                    mac 215 {
+                        name hmac-sha1
+                    }
+                    mac 220 {
+                        name hmac-sha1-96
+                    }
+                    mac 225 {
+                        name hmac-md5
+                    }
+                    mac 240 {
+                        name hmac-md5-96
+                    }
+                }
+            }
+            user-params {
+                attempts {
+                    count 64
+                }
+                local-user {
+                    user "admin" {
+                        password "$2y$10$TQrZlpBDra86.qoexZUzQeBXDY1FcdDhGWdD9lLxMuFyPVSm0OGy6"
+                        restricted-to-home false
+                        access {
+                            console true
+                            netconf true
+                            grpc true
+                            scp-sftp true
+                        }
+                        console {
+                            member ["administrative"]
+                        }
+                        public-keys {
+                            rsa {
+                                rsa-key 31 {
+                                    key-value "AAAAB3NzaC1yc2EAAAADAQABAAABAQDa9TqBvtyuTmFDvjTviN7ZbjjrM8lq8T+NeydSKE45MjcsWE5U/t+32ZnsRoX4h+e8o/1aNhKGHlUJkfRfk+Bw6K5BNH/W/zHiJ6DRI3Ivb7AQJ2SL3I35+retNjpEcahqP92cNTs2DrhN4qUuR+v5AoHr5ughP7Umw1ZXu4qni0Uu4xViSUzcxesB46BtrCsdC7T4DPHANEykFZxyPj7TCbH9rQR753me8MkT2KlT5OHED6JroETpto0q2leIe2610mOunQXZ1d7tIvWsfmAMNmvvoqFzT8Gq0VJgrSyP/XpOOX+ubdb+yH/UJ6OnpFYcpwUzz813baRhNUUJVCut"
+                                }
+                                rsa-key 32 {
+                                    key-value "AAAAB3NzaC1yc2EAAAADAQABAAABgQDKxUCv2Pq+Uvnd3laEVitmgUFB9axV66vKDtgun4PldbHKzS354beQJdRaJURh7Q6aZvlqKHz2u0YQAynJQdyiAgZQdESlUv8aG5DMnyCJ5bAN9CNiyTLzHAwWDNKSGgIaFRTe5lfCQHK5idJvrLV0pxUAG1HPJcAozrWs/Depg4Eyv78RGRK0EEYLDVso7LXe3Ekl802uGi2NCAivOK/00S2w7KFqUmT8dqbgrcazXqV0xbYU3G2S2prcQdoJz1t8EZX37LqDprELHo0VarcqNOVC6Tmhj9+NYeko+K8FV5cKCEPyskjz+gZYh6GzoC+ylHoHmfBC41/HX2q6dnDw+gre4lw7fYp/6xhFgr7Nay/QVnwTRbaNpgW2Dn8wtH7s0wRk9P/s+eNrmfyUsaQcGPSHn2IxclekbE3eLkrx9wOzn11JPpbFzyCulpJxEL40yjuAih/NAgDv1M/mhrUFe0PR6yQoqjWrLnkBfFGKBioPcaEfpj3nMcPpYIC36i8="
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+persistent-indices {
+    description "Persistent indices are maintained by the system and must not be modified."
+    vrtr-id {
+        router-name "BNG-INTERNET" vrtr-id 2
+    }
+    vrtr-if-id {
+        router-name "BNG-INTERNET" interface-name "GRP_1" vrtr-id 2 if-index 6
+        router-name "BNG-INTERNET" interface-name "REDUNDANT" vrtr-id 2 if-index 7
+        router-name "BNG-INTERNET" interface-name "SUB" vrtr-id 2 if-index 5
+        router-name "BNG-INTERNET" interface-name "loopback-1" vrtr-id 2 if-index 8
+        router-name "Base" interface-name "AGG" vrtr-id 1 if-index 4
+        router-name "Base" interface-name "CORE" vrtr-id 1 if-index 2
+        router-name "Base" interface-name "PEER_BNG" vrtr-id 1 if-index 3
+    }
+    chassis-mac {
+        client pxc index 4 pool 1 offset 1
+        client pxc index 5 pool 1 offset 2
+    }
+    log-name-id {
+        log-name "10" log-id 10 context 1 vrtr-id 1
+    }
+    log-syslog-name-id {
+        log-syslog-name "promtail" log-syslog-id 1 context 1 vrtr-id 1
+    }
+}
+
+# Finished 2025-04-07T21:50:10.2Z

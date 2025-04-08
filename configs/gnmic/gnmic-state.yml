@@ -1,0 +1,102 @@
+username: admin
+
+# Credentials
+auth_cred: &auth_cred
+  username: admin
+  password: admin
+  port: 57400
+  timeout: 10s
+  skip-verify: true
+  insecure: true
+
+# GRPC mode
+mode_stream_on_change: &mode_stream_on_change
+  mode: stream
+  stream-mode: on-change
+  sample-interval: 60s
+  encoding: JSON
+
+mode_stream_sample: &mode_stream_sample
+  mode: stream
+  stream-mode: sample
+  sample-interval: 120s
+  encoding: JSON
+
+
+# List of subscriptions
+sub_bng: &sub_bng
+  - sros-sub-mgmt-subscribers-on-change
+  - sros-sub-mgmt-subscribers-sample
+
+# Targets
+targets:
+  clab-sros_bngt-bng1:
+    <<: *auth_cred
+    subscriptions:
+      *sub_bng
+  clab-sros_bngt-bng2:
+    <<: *auth_cred
+    subscriptions:
+      *sub_bng
+
+# Definitions of subscriptions
+subscriptions:
+  sros-sub-mgmt-subscribers-on-change:
+    <<: *mode_stream_on_change
+    paths:
+      - "/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[id=*][type=ppp]/ipv4/ip-address/address"
+      - "/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[id=*][type=ppp]/ipv6/dhcp6-lease/client-address"
+      - "/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[id=*][type=ppp]/ipv6/pd/ip-prefix/prefix"
+      - "/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[id=*][type=ppp]/ipv6/slaac/address"
+      - "/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=*]/oper-state"
+      - "/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=*]/master-since"
+
+  
+  sros-sub-mgmt-subscribers-sample:
+    <<: *mode_stream_sample
+    paths:
+      - "/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[id=*][type=ppp]/ipv4/ip-address/address"
+      - "/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[id=*][type=ppp]/ipv6/dhcp6-lease/client-address"
+      - "/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[id=*][type=ppp]/ipv6/pd/ip-prefix/prefix"
+      - "/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[id=*][type=ppp]/ipv6/slaac/address"
+      - "/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=*]/oper-state"
+      - "/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=*]/master-since"
+
+outputs:
+  op-fluent:
+    type: tcp
+    address: "tel-fb:6000"
+    format: json
+    # maximum sending rate, e.g: 1ns, 10ms
+    rate: 10ms 
+    # enable TCP keepalive and specify the timer, e.g: 1s, 30s
+    keep-alive: 30s
+    # time duration to wait before re-dial in case there is a failure
+    retry-interval: 30s
+    # NOT IMPLEMENTED boolean, enables the collection and export (via prometheus) of output specific metricss
+    enable-metrics: false 
+    # list of processors to apply on the message before writing
+    delimiter: "\n"
+    event-processors: 
+      - oper-state-to-int
+  op-stdout:
+    type: file # output type
+    file-type: stdout # or stderr
+    format: json
+    event-processors:
+      - oper-state-to-int
+
+processors:
+  oper-state-to-int:
+    event-strings:
+      value-names:
+        - ".*"
+      transforms:
+        - replace:
+            apply-on: "value"
+            old: "up"
+            new: "1"
+        - replace:
+            apply-on: "value"
+            old: "down"
+            new: "0"
