@@ -1,7 +1,11 @@
-# sros_bng_telemetry
+# SROS BNG Observability Lab
 
 # Overview
 This repository contains clab that collects telemetry, events and state data from a BNG (Broadband Network Gateway), aggregation and core via SROS MDM interfaces and syslog channels.
+
+
+
+
 ![bng_state_dashboard](pic/bngstate.png)
 
 # Softare versions
@@ -166,6 +170,13 @@ docker exec -it clab-sros_bngt-bngblaster bash -c 'bngblaster -C pppoe.json -I -
 Lab topology:
 
 ![lab_topology](pic/topology.png)
+
+
+# Authors
+
+[Kivanc Imer](mailto:kivanc.imer@nokia.com) IP Solution Architect
+
+[Anton Zyablov](mailto:anton.zyablov@nokia.com) Solution Architects Lead
 
 
 
