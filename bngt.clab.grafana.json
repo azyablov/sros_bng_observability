@@ -1,0 +1,107 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "prometheus"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 3,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "gridPos": {
+        "h": 23,
+        "w": 13,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "animationControlEnabled": true,
+        "animationsEnabled": true,
+        "debuggingCtr": {
+          "colorsCtr": 1,
+          "dataCtr": 0,
+          "displaySvgCtr": 0,
+          "mappingsCtr": 0,
+          "timingsCtr": 0
+        },
+        "highlighterEnabled": true,
+        "panZoomEnabled": true,
+        "panelConfig": "---\nanchors:\n  thresholds-operstate: &thresholds-operstate\n  - color: red\n    level: 0\n  - color: green\n    level: 1\n  thresholds-traffic: &thresholds-traffic\n  - color: gray\n    level: 0\n  - color: green\n    level: 199999\n  - color: yellow\n    level: 500000\n  - color: orange\n    level: 1000000\n  - color: red\n    level: 5000000\n  label-config: &label-config\n    separator: replace\n    units: bps\n    decimalPoints: 1\n    valueMappings:\n    - valueMax: 199999\n      text: \u200b\n    - valueMin: 200000\ncellIdPreamble: cell-\ncells:\n  clab-sros_bngt-agg:1/1/1:clab-sros_bngt-bngblaster:eth1:\n    dataRef: oper-state:clab-sros_bngt-agg:1/1/1\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-agg:1/1/1:clab-sros_bngt-bngblaster:eth1:\n    dataRef: clab-sros_bngt-agg:1/1/1:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-agg:1/1/2:clab-sros_bngt-bng1:1/1/1:\n    dataRef: oper-state:clab-sros_bngt-agg:1/1/2\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-agg:1/1/2:clab-sros_bngt-bng1:1/1/1:\n    dataRef: clab-sros_bngt-agg:1/1/2:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-agg:1/1/3:clab-sros_bngt-bng2:1/1/1:\n    dataRef: oper-state:clab-sros_bngt-agg:1/1/3\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-agg:1/1/3:clab-sros_bngt-bng2:1/1/1:\n    dataRef: clab-sros_bngt-agg:1/1/3:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-bng1:1/1/1:clab-sros_bngt-agg:1/1/2:\n    dataRef: oper-state:clab-sros_bngt-bng1:1/1/1\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-bng1:1/1/1:clab-sros_bngt-agg:1/1/2:\n    dataRef: clab-sros_bngt-bng1:1/1/1:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-bng1:1/1/2:clab-sros_bngt-core:1/1/1:\n    dataRef: oper-state:clab-sros_bngt-bng1:1/1/2\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-bng1:1/1/2:clab-sros_bngt-core:1/1/1:\n    dataRef: clab-sros_bngt-bng1:1/1/2:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-bng1:1/1/3:clab-sros_bngt-bng2:1/1/3:\n    dataRef: oper-state:clab-sros_bngt-bng1:1/1/3\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-bng1:1/1/3:clab-sros_bngt-bng2:1/1/3:\n    dataRef: clab-sros_bngt-bng1:1/1/3:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-bng2:1/1/1:clab-sros_bngt-agg:1/1/3:\n    dataRef: oper-state:clab-sros_bngt-bng2:1/1/1\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-bng2:1/1/1:clab-sros_bngt-agg:1/1/3:\n    dataRef: clab-sros_bngt-bng2:1/1/1:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-bng2:1/1/2:clab-sros_bngt-core:1/1/2:\n    dataRef: oper-state:clab-sros_bngt-bng2:1/1/2\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-bng2:1/1/2:clab-sros_bngt-core:1/1/2:\n    dataRef: clab-sros_bngt-bng2:1/1/2:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-bng2:1/1/3:clab-sros_bngt-bng1:1/1/3:\n    dataRef: oper-state:clab-sros_bngt-bng2:1/1/3\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-bng2:1/1/3:clab-sros_bngt-bng1:1/1/3:\n    dataRef: clab-sros_bngt-bng2:1/1/3:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-core:1/1/1:clab-sros_bngt-bng1:1/1/2:\n    dataRef: oper-state:clab-sros_bngt-core:1/1/1\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-core:1/1/1:clab-sros_bngt-bng1:1/1/2:\n    dataRef: clab-sros_bngt-core:1/1/1:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-core:1/1/2:clab-sros_bngt-bng2:1/1/2:\n    dataRef: oper-state:clab-sros_bngt-core:1/1/2\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-core:1/1/2:clab-sros_bngt-bng2:1/1/2:\n    dataRef: clab-sros_bngt-core:1/1/2:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-core:1/1/3:clab-sros_bngt-bngblaster:eth2:\n    dataRef: oper-state:clab-sros_bngt-core:1/1/3\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-core:1/1/3:clab-sros_bngt-bngblaster:eth2:\n    dataRef: clab-sros_bngt-core:1/1/3:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-core:1/1/4:clab-sros_bngt-radius:eth1:\n    dataRef: oper-state:clab-sros_bngt-core:1/1/4\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-core:1/1/4:clab-sros_bngt-radius:eth1:\n    dataRef: clab-sros_bngt-core:1/1/4:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-radius:eth1:clab-sros_bngt-core:1/1/4:\n    dataRef: oper-state:clab-sros_bngt-radius:eth1\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-radius:eth1:clab-sros_bngt-core:1/1/4:\n    dataRef: clab-sros_bngt-radius:eth1:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-bngblaster:eth1:clab-sros_bngt-agg:1/1/1:\n    dataRef: oper-state:clab-sros_bngt-bngblaster:eth1\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-bngblaster:eth1:clab-sros_bngt-agg:1/1/1:\n    dataRef: clab-sros_bngt-bngblaster:eth1:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n  clab-sros_bngt-bngblaster:eth2:clab-sros_bngt-core:1/1/3:\n    dataRef: oper-state:clab-sros_bngt-bngblaster:eth2\n    fillColor:\n      thresholds: *thresholds-operstate\n  link_id:clab-sros_bngt-bngblaster:eth2:clab-sros_bngt-core:1/1/3:\n    dataRef: clab-sros_bngt-bngblaster:eth2:out\n    label: *label-config\n    strokeColor:\n      thresholds: *thresholds-traffic\n",
+        "siteConfig": "",
+        "svg": "",
+        "testDataEnabled": false,
+        "timeSliderEnabled": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "interface_oper_state",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "oper-state:{{source}}:{{interface_name}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "interface_traffic_rate_out_bps",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{source}}:{{interface_name}}:out",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "interface_traffic_rate_in_bps",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{source}}:{{interface_name}}:in",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "Network Telemetry",
+      "type": "andrewbmchugh-flow-panel"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "tags": [],
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Network Telemetry",
+  "version": 6,
+  "weekStart": ""
+}

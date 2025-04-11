@@ -1,0 +1,172 @@
+---
+anchors:
+  thresholds-operstate: &thresholds-operstate
+  - color: red
+    level: 0
+  - color: green
+    level: 1
+  thresholds-traffic: &thresholds-traffic
+  - color: gray
+    level: 0
+  - color: green
+    level: 199999
+  - color: yellow
+    level: 500000
+  - color: orange
+    level: 1000000
+  - color: red
+    level: 5000000
+  label-config: &label-config
+    separator: replace
+    units: bps
+    decimalPoints: 1
+    valueMappings:
+    - valueMax: 199999
+      text: ​
+    - valueMin: 200000
+cellIdPreamble: cell-
+cells:
+  clab-sros_bngt-agg:1/1/1:clab-sros_bngt-bngblaster:eth1:
+    dataRef: oper-state:clab-sros_bngt-agg:1/1/1
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-agg:1/1/1:clab-sros_bngt-bngblaster:eth1:
+    dataRef: clab-sros_bngt-agg:1/1/1:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-agg:1/1/2:clab-sros_bngt-bng1:1/1/1:
+    dataRef: oper-state:clab-sros_bngt-agg:1/1/2
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-agg:1/1/2:clab-sros_bngt-bng1:1/1/1:
+    dataRef: clab-sros_bngt-agg:1/1/2:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-agg:1/1/3:clab-sros_bngt-bng2:1/1/1:
+    dataRef: oper-state:clab-sros_bngt-agg:1/1/3
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-agg:1/1/3:clab-sros_bngt-bng2:1/1/1:
+    dataRef: clab-sros_bngt-agg:1/1/3:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-bng1:1/1/1:clab-sros_bngt-agg:1/1/2:
+    dataRef: oper-state:clab-sros_bngt-bng1:1/1/1
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-bng1:1/1/1:clab-sros_bngt-agg:1/1/2:
+    dataRef: clab-sros_bngt-bng1:1/1/1:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-bng1:1/1/2:clab-sros_bngt-core:1/1/1:
+    dataRef: oper-state:clab-sros_bngt-bng1:1/1/2
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-bng1:1/1/2:clab-sros_bngt-core:1/1/1:
+    dataRef: clab-sros_bngt-bng1:1/1/2:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-bng1:1/1/3:clab-sros_bngt-bng2:1/1/3:
+    dataRef: oper-state:clab-sros_bngt-bng1:1/1/3
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-bng1:1/1/3:clab-sros_bngt-bng2:1/1/3:
+    dataRef: clab-sros_bngt-bng1:1/1/3:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-bng2:1/1/1:clab-sros_bngt-agg:1/1/3:
+    dataRef: oper-state:clab-sros_bngt-bng2:1/1/1
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-bng2:1/1/1:clab-sros_bngt-agg:1/1/3:
+    dataRef: clab-sros_bngt-bng2:1/1/1:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-bng2:1/1/2:clab-sros_bngt-core:1/1/2:
+    dataRef: oper-state:clab-sros_bngt-bng2:1/1/2
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-bng2:1/1/2:clab-sros_bngt-core:1/1/2:
+    dataRef: clab-sros_bngt-bng2:1/1/2:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-bng2:1/1/3:clab-sros_bngt-bng1:1/1/3:
+    dataRef: oper-state:clab-sros_bngt-bng2:1/1/3
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-bng2:1/1/3:clab-sros_bngt-bng1:1/1/3:
+    dataRef: clab-sros_bngt-bng2:1/1/3:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-core:1/1/1:clab-sros_bngt-bng1:1/1/2:
+    dataRef: oper-state:clab-sros_bngt-core:1/1/1
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-core:1/1/1:clab-sros_bngt-bng1:1/1/2:
+    dataRef: clab-sros_bngt-core:1/1/1:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-core:1/1/2:clab-sros_bngt-bng2:1/1/2:
+    dataRef: oper-state:clab-sros_bngt-core:1/1/2
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-core:1/1/2:clab-sros_bngt-bng2:1/1/2:
+    dataRef: clab-sros_bngt-core:1/1/2:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-core:1/1/3:clab-sros_bngt-bngblaster:eth2:
+    dataRef: oper-state:clab-sros_bngt-core:1/1/3
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-core:1/1/3:clab-sros_bngt-bngblaster:eth2:
+    dataRef: clab-sros_bngt-core:1/1/3:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-core:1/1/4:clab-sros_bngt-radius:eth1:
+    dataRef: oper-state:clab-sros_bngt-core:1/1/4
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-core:1/1/4:clab-sros_bngt-radius:eth1:
+    dataRef: clab-sros_bngt-core:1/1/4:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-radius:eth1:clab-sros_bngt-core:1/1/4:
+    dataRef: oper-state:clab-sros_bngt-radius:eth1
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-radius:eth1:clab-sros_bngt-core:1/1/4:
+    dataRef: clab-sros_bngt-radius:eth1:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-bngblaster:eth1:clab-sros_bngt-agg:1/1/1:
+    dataRef: oper-state:clab-sros_bngt-bngblaster:eth1
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-bngblaster:eth1:clab-sros_bngt-agg:1/1/1:
+    dataRef: clab-sros_bngt-bngblaster:eth1:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
+  clab-sros_bngt-bngblaster:eth2:clab-sros_bngt-core:1/1/3:
+    dataRef: oper-state:clab-sros_bngt-bngblaster:eth2
+    fillColor:
+      thresholds: *thresholds-operstate
+  link_id:clab-sros_bngt-bngblaster:eth2:clab-sros_bngt-core:1/1/3:
+    dataRef: clab-sros_bngt-bngblaster:eth2:out
+    label: *label-config
+    strokeColor:
+      thresholds: *thresholds-traffic
