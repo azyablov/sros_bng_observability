@@ -50,7 +50,7 @@ topology:
         - configs/radius/raddb/clients.conf:/etc/raddb/clients.conf
         - configs/radius/raddb/mods-config/files/authorize:/etc/raddb/mods-config/files/authorize
         - logs/radius:/var/log/radius
-      startup-delay: 30
+      startup-delay: 10
       restart-policy: unless-stopped
     # Run to generate traffic: bngblaster -C pppoe.json -I -l dhcp
     bngblaster:
@@ -58,7 +58,7 @@ topology:
       image: azyablov/bng-blaster:latest
       binds:
         - configs/bngblaster/pppoe.json:/pppoe.json
-      startup-delay: 30
+      startup-delay: 10
       restart-policy: unless-stopped
     # syslog-ng - collect syslog
     tel-syslog:
@@ -72,7 +72,7 @@ topology:
         PUID: "0"
         PGID: "0"
       mgmt-ipv4: 172.20.20.31
-      startup-delay: 45
+      startup-delay: 10
       restart-policy: unless-stopped
     
     # Logging stack
@@ -85,7 +85,7 @@ topology:
         - /etc/localtime:/etc/localtime:ro
         - configs/promtail.yml:/etc/promtail/config.yml
       cmd: -config.file=/etc/promtail/config.yml
-      startup-delay: 30
+      startup-delay: 20
       group: state
       restart-policy: unless-stopped
     # fluentbit - ingest state data in Loki
@@ -95,7 +95,7 @@ topology:
       mgmt-ipv4: 172.20.20.33
       binds:
         - configs/fluent-bit.ini:/fluent-bit/etc/fluent-bit.conf
-      startup-delay: 30
+      startup-delay: 20
       group: state
       restart-policy: unless-stopped
     # Loki - log and state data
@@ -107,7 +107,7 @@ topology:
         - configs/loki.yml:/etc/loki/local-config.yaml
         - lokidata:/tmp/loki
       cmd: -config.file=/etc/loki/local-config.yaml
-      startup-delay: 15
+      startup-delay: 20
       group: state
       restart-policy: unless-stopped
 
@@ -120,7 +120,7 @@ topology:
         - configs/alertmanager.yml:/alertmanager.yml
         - configs/telegram_bot.token:/telegram_bot.token
       cmd: --config.file=/alertmanager.yml
-      startup-delay: 60
+      startup-delay: 30
       restart-policy: unless-stopped
     
     # gNMIc to collect state data
@@ -132,7 +132,7 @@ topology:
         - configs/gnmic/gnmic-state.yml:/gnmic-config.yml:ro
       cmd: sub --config /gnmic-config.yml --log
       group: state
-      startup-delay: 120
+      startup-delay: 30
 
 
     # Telemetry stack
@@ -147,7 +147,7 @@ topology:
       cmd: --config.file=/smokeping.yml
       env:
         GOMAXPROCS: "1"
-      startup-delay: 60
+      startup-delay: 20
       group: telemetry
       restart-policy: unless-stopped
 
@@ -160,7 +160,7 @@ topology:
         - configs/gnmic/gnmic-metrics.yml:/gnmic-config.yml:ro
       cmd: sub --config /gnmic-config.yml --log
       group: telemetry
-      startup-delay: 60
+      startup-delay: 40
     tel-prom:
       kind: linux
       image: quay.io/prometheus/prometheus:latest
@@ -172,7 +172,7 @@ topology:
         - promdata:/prometheus  # Replace with a path to simulate prometheus-data volume
       cmd: --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus
       group: telemetry
-      startup-delay: 60
+      startup-delay: 40
 
     # grafana
     tel-graf:
@@ -188,7 +188,10 @@ topology:
         GF_AUTH_ANONYMOUS_ENABLED: "true"
         GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
         GF_AUTH_ANONYMOUS: "true"
-        http_proxy: http://usdal1a-proxy.americas.nsn-net.net:8080
+        http_proxy: "http://10.7.23.18:8118/" # Update with your proxy, if not direct access to the Internet
+        https_proxy: "http://10.7.23.18:8118/" # Update with your proxy, if not direct access to the Internet
+        # Comma-separated list of plugin IDs to install
+        GF_INSTALL_PLUGINS: 'andrewbmchugh-flow-panel'
       startup-delay: 60
 
   links:

@@ -26,6 +26,10 @@ sub_bng: &sub_bng
   - sros-sub-mgmt-redundnacy
   - sros-router-interfaces
 
+sub_core_agg: &sub_core_agg
+  - sros-system-performance
+  - sros-router-interfaces
+
 # Targets
 targets:
   clab-sros_bngt-bng1:
@@ -36,6 +40,14 @@ targets:
     <<: *auth_cred
     subscriptions:
       *sub_bng
+  clab-sros_bngt-agg:
+    <<: *auth_cred
+    subscriptions:
+      *sub_core_agg
+  clab-sros_bngt-core:
+    <<: *auth_cred
+    subscriptions:
+      *sub_core_agg
 
 # Definitions of subscriptions
 subscriptions:
@@ -96,8 +108,12 @@ subscriptions:
       - /state/router[router-name=*]/interface[interface-name=*]/statistics/ip/out-octets
       - /state/router[router-name=*]/interface[interface-name=*]/statistics/mpls/in-octets
       - /state/router[router-name=*]/interface[interface-name=*]/statistics/mpls/out-octets
-      - '/state/port[port-id=*]/ethernet/statistics/in-octets'
-      - '/state/port[port-id=*/ethernet/statistics/out-octets'
+      - /state/port[port-id=*]/ethernet/statistics/in-octets
+      - /state/port[port-id=*]/ethernet/statistics/out-octets
+      - /state/port[port-id=*]/ethernet/statistics/in-utilization
+      - /state/port[port-id=*]/ethernet/statistics/out-utilization
+      - /state/port[port-id=*]/oper-state
+
 
 outputs:
   op-prometheus:
