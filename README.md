@@ -333,6 +333,3 @@ Then you can perform SSH port forwarding to your remote machine toward ro connec
 ***__Traffic__***
 
 ![Traffict](pic/Traffic.png)
-
-
-![alt text](image.png)
