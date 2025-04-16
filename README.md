@@ -66,9 +66,32 @@ TODO Anton
 
 TODO Anton
 
-# Alerting Pillars
+# Alerting Pillars of BNG
 
-TODO Anton
+What are the best practices to alert?
+Well, let's not reinvent a wheel again, since we have quite nice guidelines and best practices from  Niall Richard Murphy, Betsy Beyer, Chris Jones, Jennifer Petoff [Site Reliability Engineering](https://learning.oreilly.com/library/view/site-reliability-engineering/9781491929117/).
+Let's summarise here some key technical and operational aspects of the alerting process:
+
+1. Alert on the data (state and metrics) from BNG devices, CORE and Aggregation layer routers connected to Fixed Access NEs:
+   - High CPU usage and memory usage.
+   - High latency: reach out an NE.
+   - Links saturation.
+   - High packet loss: synthetics tests, OAM.
+   - High number of error / dropped packets on interfaces.
+   - High number of errors in logs.
+   - Unexpected grow or drop in number sessions.
+   - Approaching capacity / scalability limits.
+   - Multi-chassis state and loss or redundanc between OLT and Aggregation routers.
+   - Unexpected changes in number of routes.
+   - Fluctuations on upstream BGP peering.
+   - General criteria applicable to moderm IP/MPLS networks.
+2. Alerts should be real: it should not be a false positive or a false negative.
+3. Alerts should be urgent: it should be sent to the right people at the right time.
+4. Alerts should be actionable: it should provide enough information to help the operator understand the issue and take appropriate action.
+5. Alerts should be clear: it should be easy to understand and interpret.
+
+
+
 
 # BNG Observability (HOWTO)
 
@@ -91,7 +114,8 @@ TODO: our future.
 # BNG Setup
 
 Topology below should repesent the BNG setup and it's key functional elements w/o Telemetry Stack since it's all considered to be part of the observability stack.
-![bng_topology](topology/bng.clab.drawio.svg)
+
+![bng_topology](pic/bngt.clab.png)
 
 The following nodes are the key functional and observability elements of the BNG setup:
 - 2 SROS BNG devices (bng1 and bng2)
