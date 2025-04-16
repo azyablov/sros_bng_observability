@@ -103,7 +103,7 @@ subscriptions:
   sros-router-interfaces:
     <<: *mode_stream
     paths:
-    # port and interface utilisation
+    # port and interface utilisation, state, errors
       - /state/router[router-name=*]/interface[interface-name=*]/statistics/ip/in-octets
       - /state/router[router-name=*]/interface[interface-name=*]/statistics/ip/out-octets
       - /state/router[router-name=*]/interface[interface-name=*]/statistics/mpls/in-octets
@@ -113,6 +113,8 @@ subscriptions:
       - /state/port[port-id=*]/ethernet/statistics/in-utilization
       - /state/port[port-id=*]/ethernet/statistics/out-utilization
       - /state/port[port-id=*]/oper-state
+      - /state/port[port-id=*]/ethernet/statistics/in-errors
+      - /state/port[port-id=*]/ethernet/statistics/out-errors
 
 
 outputs:

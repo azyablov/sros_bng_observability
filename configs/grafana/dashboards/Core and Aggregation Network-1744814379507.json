@@ -1,47 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "Prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "andrewbmchugh-flow-panel",
-      "name": "Flow",
-      "version": "1.18.1"
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "11.5.2"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -61,13 +18,17 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 3,
   "links": [],
   "panels": [
     {
       "datasource": {
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
       },
       "gridPos": {
         "h": 21,
@@ -181,7 +142,7 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 8,
+        "w": 13,
         "x": 11,
         "y": 0
       },
@@ -218,7 +179,7 @@
           "refId": "A"
         }
       ],
-      "title": "Panel Title",
+      "title": "Port Status on $router",
       "type": "stat"
     },
     {
@@ -277,7 +238,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "Kbits"
         },
         "overrides": []
       },
@@ -333,13 +295,17 @@
       "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "",
   "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
-        "current": {},
+        "current": {
+          "text": "clab-sros_bngt-bng2",
+          "value": "clab-sros_bngt-bng2"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
@@ -357,7 +323,10 @@
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "Prometheus",
+          "value": "DS_PROMETHEUS"
+        },
         "label": "DS_PROMETHEUS",
         "name": "DS_PROMETHEUS",
         "options": [],
@@ -376,6 +345,6 @@
   "timezone": "browser",
   "title": "Core and Aggregation Network",
   "uid": "ceixmas0zbqwwf",
-  "version": 6,
+  "version": 1,
   "weekStart": ""
 }

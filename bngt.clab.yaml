@@ -79,7 +79,7 @@ topology:
     # promtail - ingest syslog messages in Loki
     tel-pt:
       kind: linux
-      image: grafana/promtail:latest
+      image: grafana/promtail:3.4.3
       mgmt-ipv4: 172.20.20.32
       binds:
         - /etc/localtime:/etc/localtime:ro
@@ -91,7 +91,7 @@ topology:
     # fluentbit - ingest state data in Loki
     tel-fb:
       kind: linux
-      image: cr.fluentbit.io/fluent/fluent-bit:latest
+      image: cr.fluentbit.io/fluent/fluent-bit:3.2.10
       mgmt-ipv4: 172.20.20.33
       binds:
         - configs/fluent-bit.ini:/fluent-bit/etc/fluent-bit.conf
@@ -101,7 +101,7 @@ topology:
     # Loki - log and state data
     tel-loki:
       kind: linux
-      image: grafana/loki:latest
+      image: grafana/loki:3.4.2
       mgmt-ipv4: 172.20.20.34
       binds:
         - configs/loki.yml:/etc/loki/local-config.yaml
@@ -114,7 +114,7 @@ topology:
     # Alertmanager with Telegram config, pls consider to update telegram_bot.token!
     tel-am:
       kind: linux
-      image: quay.io/prometheus/alertmanager:latest
+      image: quay.io/prometheus/alertmanager:v0.28.1
       mgmt-ipv4: 172.20.20.35
       binds:
         - configs/alertmanager.yml:/alertmanager.yml
@@ -127,7 +127,7 @@ topology:
     gnmic-state:
       kind: linux
       mgmt-ipv4: 172.20.20.41
-      image: harbor.nice.nokia.net/ghcr/openconfig/gnmic:latest
+      image: harbor.nice.nokia.net/ghcr/openconfig/gnmic:0.39.1
       binds:
         - configs/gnmic/gnmic-state.yml:/gnmic-config.yml:ro
       cmd: sub --config /gnmic-config.yml --log
@@ -139,7 +139,7 @@ topology:
     # smokeping to check MGMT inf availability
     tel-sping:
       kind: linux
-      image: quay.io/superq/smokeping-prober:latest
+      image: quay.io/superq/smokeping-prober:v0.9.0
       mgmt-ipv4: 172.20.20.36
       binds:
         - configs/smokeping.yml:/smokeping.yml
@@ -155,7 +155,7 @@ topology:
     gnmic-metrics:
       kind: linux
       mgmt-ipv4: 172.20.20.42
-      image: harbor.nice.nokia.net/ghcr/openconfig/gnmic:latest
+      image: harbor.nice.nokia.net/ghcr/openconfig/gnmic:0.39.1
       binds:
         - configs/gnmic/gnmic-metrics.yml:/gnmic-config.yml:ro
       cmd: sub --config /gnmic-config.yml --log
@@ -163,7 +163,7 @@ topology:
       startup-delay: 40
     tel-prom:
       kind: linux
-      image: quay.io/prometheus/prometheus:latest
+      image: quay.io/prometheus/prometheus:v2.53.4
       mgmt-ipv4: 172.20.20.37
       binds:
         - configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
@@ -177,7 +177,7 @@ topology:
     # grafana
     tel-graf:
       kind: linux
-      image: grafana/grafana:latest
+      image: grafana/grafana:11.5.2
       mgmt-ipv4: 172.20.20.38
       binds:
         - configs/grafana/provisioning/datasources/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
