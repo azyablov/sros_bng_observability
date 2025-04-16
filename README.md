@@ -1,47 +1,122 @@
 # SROS BNG Observability Lab
 
-# Overview
-This repository contains clab that collects telemetry, events and state data from a BNG (Broadband Network Gateway), aggregation and core via SROS MDM interfaces and syslog channels.
+# Introduction
+
+## Overview
+This repository contains clab that collects telemetry, events and state data from a BNG (Broadband Network Gateway), aggregation and core network elements via SROS MDM interfaces and syslog channels. 
+The our immediate objectives are to show how BNG telemetry data can be collected and visualized using open-source tools such as Prometheus, Grafana, Fluent Bit, Loki, gNMIc, Smokeping and Alertmanager. The lab also includes a BNG Blaster, which is a traffic generator that can be used to generate traffic on the BNG devices. The lab is designed to be easy to use and can be deployed using Containerlab.
+The long-term goal is to create a comprehensive observability concept solution for BNG devices that can be used in lab environments.
+Let's move step by step via the principle and pillars, since every endeavor should start with a plan and vision behind.
+
+# Authors
+
+[Kivanc Imer](mailto:kivanc.imer@nokia.com) - IP Solution Architect
+
+[Anton Zyablov](mailto:anton.zyablov@nokia.com) - Solution Architects Lead
 
 
+## Softare Versions
+
+| Software    | Version  |
+|-------------|----------|
+| Nokia SROS  | 24.7.R1  |
+| gnmic       | 0.39.1   |
+| bngblaster  | 0.9.17   |
+| fluent-bit  | 3.2.10   |
+| prometheus  | 2.53.4  |
+| grafana     | 11.5.2   |
+| freeradius-server | 3.2.3 |
+| syslog-ng | 4.8.1-r1-ls153 |
+| promtail |  3.4.3 |
+| loki | 3.4.2 |
+| alertmanager | 0.28.1 |
+| smokeping_prober | 0.9.0 |
 
 
-![bng_state_dashboard](pic/bngstate.png)
-
-# Softare versions
-
-SROS 24.7.R1
-gNMIc 0.39.1
-
-# Requirements
+## Requirements
 
 In order to run this clab, you need to have the following installed:
 - [Docker](https://docs.docker.com/get-docker/)
 - [Containerlab](https://containerlab.dev/getting-started/installation/)
 
 Additional licenses and API tokens:
-- SROS license is required to run the SROS containers.
-- Telegram API token is required to send messages to a Telegram channel.
+- SROS images (vr-sros should obtained from official Nokia representatives).
+- SROS license is required to run the SROS containers (should obtained from official Nokia representatives).
+- Telegram API token is required to send messages to a Telegram channel [Telegram bots Tutorial](https://core.telegram.org/bots/tutorial).
 
-# Getting Started
+# What is Observability?
 
-In order to bring up the lab execute `sudo clab deploy`.
-The following command will create a lab with the following nodes:
-- 2 SROS BNG devices
-- 1 Aggregation device
-- 1 Core device
-- 1 BNG Blaster: traffic generator
-- 1 Syslog server
-- 1 Loki server
+## Definition
+
+TODO Anton
+
+## Principles
+
+TODO Anton
+
+## Observability vs Monitoring
+
+TODO Anton
+
+## Why do we need it?
+
+TODO Anton
+
+## The Three Pillars of Observability 
+
+TODO Anton
+
+# Alerting Pillars
+
+TODO Anton
+
+# BNG Observability (HOWTO)
+
+## What's Applicable to BNG (Our Big Bang Theory)
+
+TODO Anton
+
+## What and Why to collect?
+
+TODO Kivanc: Describe xpath, what and why to collect, how to alert on it.
+
+## How to collect?
+
+TODO Anton
+
+## What's the next? (TODO List)
+
+TODO: our future.
+
+# BNG Setup
+
+Topology below should repesent the BNG setup and it's key functional elements w/o Telemetry Stack since it's all considered to be part of the observability stack.
+![bng_topology](topology/bng.clab.drawio.svg)
+
+The following nodes are the key functional and observability elements of the BNG setup:
+- 2 SROS BNG devices (bng1 and bng2)
+- 1 Aggregation device: client side (agg)
+- 1 Core device: for upsteam peering (HSI service for example)
+- 1 BNG Blaster: traffic generator which allows us to spawn 10 PPPoE Dual-Stack IPiv4/IPv6 sessions
+- 1 Syslog server: aggregates logs and feed it toward the Promtail
+- 1 Loki server: accumulate log and state data
 - 1 Promtail server: takes logs from the syslog server and sends them to Loki
-- 1 Prometheus server
-- 1 Grafana server
-- 1 Alertmanager server: if you have Telegram API token, you can send alerts to a Telegram channel
+- 1 Prometheus server: where all metrics are living
+- 1 Grafana server: our visualisation
+- 1 Alertmanager server: where you can play with prometheus alerts, if you have Telegram API token, you can send alerts to a Telegram channel
 - 1 Fluent Bit server: collects state from gnmic and sends them to Loki
 - 1 Smokeping server: collects latency data and sends them to Prometheus
 - 1 gNMIc server: collects telemetry data from the BNG devices and sends them to Prometheus
 - 1 gNMIc server: collects state data from the BNG devices and sends them to Fluent Bit
-- 1 FreeRadius server
+- 1 FreeRadius server: our lovely AAA "classic"
+
+TODO Kivanc: Describe functional setup: AAA, agg, core, bng, bngbalster, services, bng functions , bng design readout/
+
+
+# Getting Started
+
+In order to bring up the lab execute `sudo clab deploy`.
+
 
 ```bash
 23:49:02 INFO Containerlab started version=0.67.0
@@ -167,16 +242,6 @@ OR do it in one command:
 docker exec -it clab-sros_bngt-bngblaster bash -c 'bngblaster -C pppoe.json -I -l dhcp'
 ```
 
-Lab topology:
-
-![lab_topology](pic/topology.png)
-
-
-# Authors
-
-[Kivanc Imer](mailto:kivanc.imer@nokia.com) IP Solution Architect
-
-[Anton Zyablov](mailto:anton.zyablov@nokia.com) Solution Architects Lead
 
 
 
