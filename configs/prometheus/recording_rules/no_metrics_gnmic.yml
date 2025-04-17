@@ -1,0 +1,16 @@
+groups: 
+- name: gnmic2ne
+  interval: 60s
+  rules:
+  - alert: gnmicNoMertics
+    # Setting 24 hour to grab all possible sources and 1h for missed NE to ensure not overreaction on reboots, changes in the network impacting connectivity during MW
+    expr: count by (source,job) (count_over_time(state_system_cpu_summary_usage_cpu_time[24h])) unless count by (source,job) (count_over_time(state_system_cpu_summary_usage_cpu_time[10m]))
+    for: 10m # Avoid firing after restarts or right after a new deployment
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{ $labels.job }}: state_system_cpu_summary_usage_cpu_usage metric is disappeared for {{ $labels.source }}"
+      description: |
+        my_metric_state_system_cpu_summary_usage_cpu_usagetotal has not been scraped from {{ $labels.source }}
+        for at least 20 mins, including 10m (looking back).
+
