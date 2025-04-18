@@ -474,16 +474,15 @@ The following nodes are the key functional and observability elements of the *BN
 
   
 
-TODO Kivanc: Describe functional setup: AAA, agg, core, bng, bngbalster, services, bng functions , bng design readout/
-This setup consists of 2 Redundant BNGs serving a small number of simulated users in a simple network. AGG, BNGS and CORE Router are all using ISIS for routing and SR-MPLS for tunneling.
-	- BNG Blaster simulates the subscribers and initiate sessions.
-	- Subscriber traffic is sent to AGG. On AGG, a EVPN-VPLS receives the traffic and broadcasts PPP PADI Session initiation to the BNGs.
-	- BNGs are working as hot-standby Active/Standby redundancy. Only Active BNG replies to PADI.  Active BNG is selected by SRRP protocol. BNGs are connected via an Redundant Interface over MPLS network. Redundant Interface allows traffic to pass the Active BNG, in case Standby BNG receives downstream traffic erroneously. 
-	- Active BNG authenticates the access-request with RADIUS. RADIUS replies with relevant profiles and DHCP Pool Name to bring up the subscribers.
-	- Active BNG creates session resources on BNG and continues to communicate with PPP Client to establish the session. IP Assignment is done via local DHCP Server on BNG.
-	- All information about the session (Profiles, QoS, DHCP Leases etc..) are synchronized to Standby BNG.
-	- Both BNGs advertise the aggregated subscriber prefixes to the CORE. on BNG those aggregated subscriber prefixes are tracked by SRRP and BNG is aware of its state for that prefix. On the export policy, BNG exports to CORE with higher (150) Local Preference if itself is in SRRP Master state. If not, BNG advertises with standard (100) Local Preference.
-	- CORE Router has route to the subscribers and also has a link to BNGBlaster to close the loop. This interface represents an Network Interface. BNG Blaster receives the traffic back which was sent from the Access Interface.
+This setup consists of 2 Redundant BNGs serving a small number of simulated users in a simple network. AGG, BNGS and CORE Router are all using ISIS for routing and SR-MPLS for tunneling.<br>
+	- BNG Blaster simulates the subscribers and initiate sessions.<br>
+	- Subscriber traffic is sent to AGG. On AGG, a EVPN-VPLS receives the traffic and broadcasts PPP PADI Session initiation to the BNGs.<br>
+	- BNGs are working as hot-standby Active/Standby redundancy. Only Active BNG replies to PADI.  Active BNG is selected by SRRP protocol. BNGs are connected via an Redundant Interface over MPLS network. Redundant Interface allows traffic to pass the Active BNG, in case Standby BNG receives downstream traffic erroneously. <br>
+	- Active BNG authenticates the access-request with RADIUS. RADIUS replies with relevant profiles and DHCP Pool Name to bring up the subscribers.<br>
+	- Active BNG creates session resources on BNG and continues to communicate with PPP Client to establish the session. IP Assignment is done via local DHCP Server on BNG.<br>
+	- All information about the session (Profiles, QoS, DHCP Leases etc..) are synchronized to Standby BNG.<br>
+	- Both BNGs advertise the aggregated subscriber prefixes to the CORE. on BNG those aggregated subscriber prefixes are tracked by SRRP and BNG is aware of its state for that prefix. On the export policy, BNG exports to CORE with higher (150) Local Preference if itself is in SRRP Master state. If not, BNG advertises with standard (100) Local Preference.<br>
+	- CORE Router has route to the subscribers and also has a link to BNGBlaster to close the loop. This interface represents an Network Interface. BNG Blaster receives the traffic back which was sent from the Access Interface.<br>
 
   
   
