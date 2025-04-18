@@ -484,6 +484,9 @@ This setup consists of 2 Redundant BNGs serving a small number of simulated user
 	- Both BNGs advertise the aggregated subscriber prefixes to the CORE. on BNG those aggregated subscriber prefixes are tracked by SRRP and BNG is aware of its state for that prefix. On the export policy, BNG exports to CORE with higher (150) Local Preference if itself is in SRRP Master state. If not, BNG advertises with standard (100) Local Preference.<br>
 	- CORE Router has route to the subscribers and also has a link to BNGBlaster to close the loop. This interface represents an Network Interface. BNG Blaster receives the traffic back which was sent from the Access Interface.<br>
 
+
+  ![Topology and Services](pic/Topology_and_Services.png)
+
   
   
 
