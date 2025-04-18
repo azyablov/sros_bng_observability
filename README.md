@@ -15,6 +15,7 @@ Let's move step by step via the principle and pillars, since every endeavor shou
 ## Authors
 
 [Kivanc Imer](mailto:kivanc.imer@nokia.com) - IP Solution Architect
+
 [Anton Zyablov](mailto:anton.zyablov@nokia.com) - Solution Architects Lead
 
 ## Softare Versions
