@@ -379,6 +379,8 @@ In order to bring up the lab execute `sudo clab deploy`.
 ╰──────────────────────────────┴───────────────────────────────────────────────────────────────────┴─────────┴────────────────╯
 ```
 
+![bng_topology](pic/bngt.clab.png)
+
 Then it's a time to let in your subscribers by running *BNG Blaster*, just execute following command:
 
 ```bash
@@ -397,6 +399,8 @@ docker exec -it clab-sros_bngt-bngblaster bash -c 'bngblaster -C pppoe.json -I -
 ```
 
 Then you can perform SSH port forwarding to your remote machine toward ro connect locally to `clab-sros_bngt-tel-graf:3000` and voilà... your nice dashboard are ready to use.
+
+# Dashboards Gallery
 
 ***_BNG State and Redundancy_***
 
