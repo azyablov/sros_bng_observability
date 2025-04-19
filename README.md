@@ -6,7 +6,7 @@
 This repository contains `clab` that implements *BNG* test-bed and collects telemetry, events and state data from a *BNG (Broadband Network Gateway)*, aggregation and core network elements via *SROS MDM* interfaces and syslog channels. 
 The our immediate objectives are to show how *BNG* telemetry data can be collected and visualized using open-source tools such as `Prometheus`, `Grafana`, `Fluent Bit`, `Loki`, `gNMIc`, `Smokeping` and `Alertmanager`. The lab also includes a *BNG Blaster*, which is a traffic generator that can be used to generate traffic on the *BNG* devices. The lab is designed to be easy to use and can be deployed using `Containerlab`.
 The goal is to create a simple observability concept solution for *BNG* devices that can be used in lab environments and test-beds.
-For the full-blwon solution please refer to the official Nokia representatives.
+For the full-blown solution please refer to the official Nokia representatives.
 
 | <img src="pic/BNG_State_and_Redundancy.png" height="220" width="450"/> | <img src="pic/Subscriber_Inside.png" height="220" width="450"/> |
 |----------------------------------------|----------------------------------------|
