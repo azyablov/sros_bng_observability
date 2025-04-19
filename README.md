@@ -5,7 +5,9 @@
 ## Overview
 This repository contains `clab` that implements *BNG* test-bed and collects telemetry, events and state data from a *BNG (Broadband Network Gateway)*, aggregation and core network elements via *SROS MDM* interfaces and syslog channels. 
 The our immediate objectives are to show how *BNG* telemetry data can be collected and visualized using open-source tools such as `Prometheus`, `Grafana`, `Fluent Bit`, `Loki`, `gNMIc`, `Smokeping` and `Alertmanager`. The lab also includes a *BNG Blaster*, which is a traffic generator that can be used to generate traffic on the *BNG* devices. The lab is designed to be easy to use and can be deployed using `Containerlab`.
-The long-term goal is to create a comprehensive observability concept solution for *BNG* devices that can be used in lab environments and test-beds.
+The goal is to create a simple observability concept solution for *BNG* devices that can be used in lab environments and test-beds.
+For the full-blwon solution please refer to the official Nokia representatives.
+
 | <img src="pic/BNG_State_and_Redundancy.png" height="220" width="450"/> | <img src="pic/Subscriber_Inside.png" height="220" width="450"/> |
 |----------------------------------------|----------------------------------------|
 | <img src="pic/Core_and_Aggregation_Network.png" height="200" width="450"/> | <img src="pic/BNG_Resources.png" height="200" width="450"/> |
@@ -398,7 +400,7 @@ OR do it in one go:
 docker exec -it clab-sros_bngt-bngblaster bash -c 'bngblaster -C pppoe.json -I -l dhcp'
 ```
 
-Then you can perform SSH port forwarding to your remote machine toward ro connect locally to `clab-sros_bngt-tel-graf:3000` and voilà... your nice dashboard are ready to use.
+Then you can perform SSH port forwarding to your remote machine toward ro connect locally to `clab-sros_bngt-tel-graf:3000` and voilà... your nice dashboards are ready to use.
 
 # Dashboards Gallery
 
