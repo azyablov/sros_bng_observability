@@ -1,8 +1,8 @@
 # SROS BNG / MAG-Integrated Observability Lab
 
-# TL;DR VS Quick Start
+# TL;DR VS Quick Start
 
-The goal of the lab is to spin up a full MAG‑Integrated (BNG) observability stack in less than 10 min, so let's not waste time and get started right away. Go straight to the 🚀 🚀 🚀  [Quick Start](#quick-start) section.
+The goal of the lab is to spin up a full MAG‑Integrated (BNG) observability stack in less than 10 min, so let's not waste time and get started right away. Go straight to the [Quick Start](#quick-start) section 🚀 🚀 🚀 .
 Please do not forget to check the [Requirements](#requirements) section before you start, it's important!
 
 
@@ -30,7 +30,7 @@ Please do not forget to check the [Requirements](#requirements) section before y
       - [What and Why to collect?](#what-and-why-to-collect)
   - [MAG (BNG) Setup](#mag-bng-setup)
     - [Key Components](#key-components)
-  - [Quick Start](#quick-start)
+  - [Quick Start](#quick-start)
   - [Dashboards Gallery](#dashboards-gallery)
 
 </details>
@@ -292,7 +292,7 @@ The following components represent the primary functional and observability elem
 - **1 gNMIc server**: Collects state data from BNG devices and forwards it to Fluent Bit
 - **1 FreeRadius server**: Provides AAA (Authentication, Authorization, and Accounting) functionalities
 
-# Quick Start
+# Quick Start
 
 In order to bring up the lab execute `sudo clab deploy`.
 
