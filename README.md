@@ -2,7 +2,7 @@
 
 # TL;DR VS Quick Start
 
-The goal of the lab is to spin up a full MAG‑Integrated (BNG) observability stack in less than 10 min, so let's not waste time and get started right away. Go straight to the 🚀 🚀 🚀 [Quick Start](#quick-start) section.
+The goal of the lab is to spin up a full MAG‑Integrated (BNG) observability stack in less than 10 min, so let's not waste time and get started right away. Go straight to the 🚀 🚀 🚀  [Quick Start](#quick-start) section.
 Please do not forget to check the [Requirements](#requirements) section before you start, it's important!
 
 
@@ -30,7 +30,7 @@ Please do not forget to check the [Requirements](#requirements) section before y
       - [What and Why to collect?](#what-and-why-to-collect)
   - [MAG (BNG) Setup](#mag-bng-setup)
     - [Key Components](#key-components)
-  - [Quick Start](#quick-start)
+  - [Quick Start](#quick-start)
   - [Dashboards Gallery](#dashboards-gallery)
 
 </details>
@@ -89,7 +89,7 @@ Additional licenses and API tokens:
 - *SROS* license is required to run the *SROS* containers (should obtained from official Nokia representatives).
 - Optional: *Telegram API Token* is required to send messages to a Telegram channel [Telegram Bots Tutorial](https://core.telegram.org/bots/tutorial).
 
-Go to 🚀 🚀 🚀 [Quick Start](#quick-start) in order to run it!
+Go to 🚀 🚀 🚀  [Quick Start](#quick-start) in order to run it!
 
 # TL;DR Observability for MAG (BNG)
 
