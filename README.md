@@ -1,8 +1,8 @@
-# SROS MAG-Integrated / BNG Observability Lab
+# SROS BNG / MAG-Integrated Observability Lab
 
 # TL;DR VS Quick Start
 
-The goal of the lab is to spin up a full MAG‑Integrated (BNG) observability stack in less than 10 min, so let's not waste time and get started right away. Go straight to the [🚀 Quick Start](#quick-start) section.
+The goal of the lab is to spin up a full MAG‑Integrated (BNG) observability stack in less than 10 min, so let's not waste time and get started right away. Go straight to the 🚀 🚀 🚀 [Quick Start](#quick-start) section.
 Please do not forget to check the [Requirements](#requirements) section before you start, it's important!
 
 
@@ -30,7 +30,7 @@ Please do not forget to check the [Requirements](#requirements) section before y
       - [What and Why to collect?](#what-and-why-to-collect)
   - [MAG (BNG) Setup](#mag-bng-setup)
     - [Key Components](#key-components)
-  - 🚀  [Quick Start](#quick-start)
+  - [Quick Start](#quick-start)
   - [Dashboards Gallery](#dashboards-gallery)
 
 </details>
@@ -88,6 +88,8 @@ Additional licenses and API tokens:
 - *SROS* images (vr-sros should obtained from official Nokia representatives).
 - *SROS* license is required to run the *SROS* containers (should obtained from official Nokia representatives).
 - Optional: *Telegram API Token* is required to send messages to a Telegram channel [Telegram Bots Tutorial](https://core.telegram.org/bots/tutorial).
+
+Go to 🚀 🚀 🚀 [Quick Start](#quick-start) in order to run it!
 
 # TL;DR Observability for MAG (BNG)
 
@@ -431,6 +433,8 @@ docker exec -it clab-sros_bngt-bngblaster bash -c 'bngblaster -C pppoe.json -I -
 ```
 
 Then you can perform SSH port forwarding to your remote machine toward ro connect locally to `clab-sros_bngt-tel-graf:3000` and voilà... your nice dashboards are ready to use.
+
+Grafana: <http://localhost:3000>
 
 # Dashboards Gallery
 
