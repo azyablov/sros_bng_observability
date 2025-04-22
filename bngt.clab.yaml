@@ -188,8 +188,8 @@ topology:
         GF_AUTH_ANONYMOUS_ENABLED: "true"
         GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
         GF_AUTH_ANONYMOUS: "true"
-        http_proxy: "http://10.7.23.18:8118/" # Update with your proxy, if not direct access to the Internet
-        https_proxy: "http://10.7.23.18:8118/" # Update with your proxy, if not direct access to the Internet
+        http_proxy: ${HTTP_PROXY} # Update with your proxy, if not direct access to the Internet
+        https_proxy: ${HTTPS_PROXY} # Update with your proxy, if not direct access to the Internet
         # Comma-separated list of plugin IDs to install
         GF_INSTALL_PLUGINS: 'andrewbmchugh-flow-panel'
       startup-delay: 60
