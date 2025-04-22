@@ -1,13 +1,50 @@
 # SROS MAG-Integrated / BNG Observability Lab
 
+# TL;DR VS Quick Start
+
+The goal of the lab is to spin up a full MAG‑Integrated (BNG) observability stack in less than 10 min, so let's not waste time and get started right away. Go straight to the [🚀 Quick Start](#quick-start) section.
+Please do not forget to check the [Requirements](#requirements) section before you start, it's important!
+
+
+<details>
+<summary>📑 Table of Contents</summary>
+
+- [SROS MAG-Integrated / BNG Observability Lab](#sros-mag-integrated--bng-observability-lab)
+  - [TL;DR VS Quick Start](#tldr-vs-quick-start)
+  - [Introduction](#introduction)
+    - [Overview](#overview)
+    - [Authors](#authors)
+    - [Software Versions](#software-versions)
+  - [Requirements](#requirements)
+  - [TL;DR Observability for MAG (BNG)](#tldr-observability-for-mag-bng)
+    - [Observability vs Monitoring](#observability-vs-monitoring)
+    - [What Should I Collect?](#what-should-i-collect)
+    - [Why do we need it?](#why-do-we-need-it)
+    - [The three pillars of Observability](#the-three-pillars-of-observability)
+      - [Logs](#logs)
+      - [Metrics and State](#metrics-and-state)
+      - [Traces](#traces)
+    - [Alerting pillars of BNG](#alerting-pillars-of-bng)
+    - [MAG (BNG) Observability HOWTO](#mag-bng-observability-howto)
+      - [Observability Stack](#observability-stack)
+      - [What and Why to collect?](#what-and-why-to-collect)
+  - [MAG (BNG) Setup](#mag-bng-setup)
+    - [Key Components](#key-components)
+  - 🚀  [Quick Start](#quick-start)
+  - [Dashboards Gallery](#dashboards-gallery)
+
+</details>
+
 # Introduction
 
 ## Overview
-This repository contains `clab` that implements *MAG-Integrated (Multi-Access Gateway) / BNG (Broadband Network Gateway)* test-bed and collects telemetry, events and state data from a *BNG*, aggregation and core network elements via *SROS MDM* interfaces and syslog channels. For the sake of simplicity, we are going to refer to the *BNG* as a *MAG* in this document, as the term reflecting better the modern nature of this NE Function in a network. 
+
+This repository contains `clab` that implements *MAG-Integrated (Multi-Access Gateway) / BNG (Broadband Network Gateway)* test-bed and collects telemetry, events and state data from a *BNG*, aggregation and core network elements via *SROS MDM* interfaces and syslog channels. The lab is designed to be used in a lab environment and can be easily deployed using `Containerlab`. 
+For the sake of simplicity, we are going to refer to the *BNG* as a *MAG* in this document, as the term reflecting better the modern nature of this NE Function in a network. 
 
 The lab is designed to be used for demonstration and testing purposes only. It is not intended to be used in production environments.
 
-Our immediate objectives are to show how *MAG*  telemetry data can be collected and visualized using open-source tools such as `Prometheus`, `Grafana`, `Fluent Bit`, `Loki`, `gNMIc`, `Smokeping` and `Alertmanager`. The lab also includes a *BNG Blaster*, which is a traffic generator that can be used to generate traffic on the *MAG*  devices. The lab is designed to be easy to use and can be deployed using `Containerlab`.
+Our immediate objectives are to show how *MAG*  telemetry data can be collected and visualized using open-source tools such as `Prometheus`, `Grafana`, `Fluent Bit`, `Loki`, `gNMIc`, `Smokeping` and `Alertmanager`. The lab also includes a *BNG Blaster*, which is a traffic generator that can be used to generate traffic on the *MAG*  devices. 
 The goal is to create a simple observability concept solution for *MAG*  devices that can be used in lab environments and testbeds.
 For the full-blown solution please refer to the official Nokia representatives.
 
@@ -50,13 +87,13 @@ To run this clab, you need to have the following installed:
 Additional licenses and API tokens:
 - *SROS* images (vr-sros should obtained from official Nokia representatives).
 - *SROS* license is required to run the *SROS* containers (should obtained from official Nokia representatives).
-- *Telegram API* token is required to send messages to a Telegram channel [Telegram Bots Tutorial](https://core.telegram.org/bots/tutorial).
+- Optional: *Telegram API Token* is required to send messages to a Telegram channel [Telegram Bots Tutorial](https://core.telegram.org/bots/tutorial).
 
-# What is Observability?
+# TL;DR Observability for MAG (BNG)
 
 ## Observability vs Monitoring
 
-Not the same as monitoring (practically collection and visualisation), so the aim of this setup is to provide observability of the *MAG*  devices and the network elements connected to it. Observability is a measure of how well internal states of a system can be inferred from knowledge of its external outputs. In other words, observability is the ability to understand what is happening inside a system based on the data that is available from outside the system. Collection of everything creates a mess and makes observation and troubleshooting hard.
+Not the same as monitoring (practically collection and visualization), so the aim of this setup is to provide observability of the *MAG*  devices and the network elements connected to it. Observability is a measure of how well internal states of a system can be inferred from knowledge of its external outputs. In other words, observability is the ability to understand what is happening inside a system based on the data that is available from outside the system. Collection of everything creates a mess and makes observation and troubleshooting hard.
 
 Our magic formula would be the following:
 
@@ -107,13 +144,13 @@ Provide context-specific details (e.g., which user made a request).
 Help debug distributed systems by correlating requests across different services.
 
 
-***MAG use-case applicability:*** Has this something to do with *MAG* ? At the first glance no, but if we look deeper and start considering the whole network and distributed system, which is the case, then things like traffic path, apprearance of subcriber on the different NEs with relevant state and metrics data could be considered as a trace.
+***MAG use-case applicability:*** Has this something to do with *MAG* ? At the first glance no, but if we look deeper and start considering the whole network and distributed system, which is the case, then things like traffic path, appearance of subscriber on the different NEs with relevant state and metrics data could be considered as a trace.
 
-#  Alerting pillars of BNG
+##  Alerting pillars of BNG
 
 What are the best practices to alert?
 Well, let's not reinvent a wheel again, since we have quite nice guidelines and best practices from  Niall Richard Murphy, Betsy Beyer, Chris Jones, Jennifer Petoff [Site Reliability Engineering](https://learning.oreilly.com/library/view/site-reliability-engineering/9781491929117/).
-Let's summarise here some key technical and operational aspects of the alerting process:
+Let's summarize here some key technical and operational aspects of the alerting process:
 
 1. Alert on the data (state and metrics) from *MAG*  devices, CORE and Aggregation layer routers connected to Fixed Access NEs:
    - High CPU usage and memory usage.
@@ -133,13 +170,13 @@ Let's summarise here some key technical and operational aspects of the alerting 
 4. Alerts should be actionable: it should provide enough information to help the operator understand the issue and take appropriate action.
 5. Alerts should be clear: it should be easy to understand and interpret.
 
-# BNG Observability (HOWTO)
+## MAG (BNG) Observability HOWTO
 
-## Observability Stack
+### Observability Stack
 
 Let's first consider metrics, not the state. The data path is quite standard `gNMIc` => `Prometheus` => `Grafana` with sample and on-change *gNMI* telemetry subscriptions.
 The state data is collected in different ways. If the state is binary and easy to convert to the `(0|1)` metric and passed as time series data via `Prometheus`.
-For example, the oper-state of the interface can be converted to `0` or `1` via gnmic event processors and passed to Prometheus.
+For example, the oper-state of the interface can be converted to `0` or `1` via `gnmic` event processors and passed to Prometheus.
 ```yaml
 processors:
   oper-state-to-int:
@@ -158,7 +195,7 @@ processors:
 ```
 Full gnmic configuration file to collect telemetry => [gnmic-metrics.yml](clab/sros_bng_observability/configs/gnmic/gnmic-metrics.yml)
 
-In case we are talking about somehing like *SRRP* state or *IPv4/IPv6* address it takes another way: `gNMIc` => `Fluent Bit` => `Loki` => `Grafana`.
+In case we are talking about something like *SRRP* state or *IPv4/IPv6* address it takes another way: `gNMIc` => `Fluent Bit` => `Loki` => `Grafana`.
 The corresponding `gnmic` configs can be found below:
 ```yaml
 # Definitions of subscriptions
@@ -196,11 +233,11 @@ Apart from that additional alerting rules and Heatmap were added to verify if `N
 Alerting rules are configured to send alerts to the `Alertmanager` server, which is then sent to the Telegram channel (check for the telegram token). 
 This is done for the illustrative purposes and could be adjusted per need and requirements relatively easily.
 
-As *NetOps* and *DevOps* pracititioners we should consider limits and scalability of the solution. The current setup is designed to be scalable and can be easily extended to support more devices and services.
-But we should remember about limits on *NE* side to support number of subscriptions and number of sessions. The telemetry stack scaling should be cosidered as well as more network elements and data is been colleceted.
+As *NetOps* and *DevOps* practitioners we should consider limits and scalability of the solution. The current setup is designed to be scalable and can be easily extended to support more devices and services.
+But we should remember about limits on *NE* side to support number of subscriptions and number of sessions. The telemetry stack scaling should be considered as well as more network elements and data is been collected.
 This is especially relevant *MAG*  where you can't simply pull everything for hundreds of thousands of subscribers at the same time, but we are going to discuss it in the next session in a bit greater detail.
 
-## What and Why to collect?
+### What and Why to collect?
 
 | Component                        | XPath                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Notes                                                                                                                                                                                                                                                                                                                                                       |
 |----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -212,9 +249,9 @@ This is especially relevant *MAG*  where you can't simply pull everything for hu
 | Port and Interface<br>Statistics | - `/state/router[router-name=*]/interface[interface-name=*]/statistics/ip/in-octets`<br>- `/state/router[router-name=*]/interface[interface-name=*]/statistics/ip/out-octets`<br>- `/state/router[router-name=*]/interface[interface-name=*]/statistics/mpls/in-octets`<br>- `/state/router[router-name=*]/interface[interface-name=*]/statistics/mpls/out-octets`<br>- `/state/port[port-id=*]/ethernet/statistics/in-octets`<br>- `/state/port[port-id=*]/ethernet/statistics/out-octets`<br>- `/state/port[port-id=*]/ethernet/statistics/in-utilization`<br>- `/state/port[port-id=*]/ethernet/statistics/out-utilization`<br>- `/state/port[port-id=*]/oper-state`<br>- `/state/port[port-id=*]/ethernet/statistics/in-errors`<br>- `/state/port[port-id=*]/ethernet/statistics/out-errors`                                                                                                                                                                | Port and interface statistics are critical for monitoring, troubleshooting, and capacity planning.                                                                                                                                                                                                                                                           |
 | Per Subscriber<br>Info           | - `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[type=ppp][id=*]/up-time`<br>- `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[type=ppp][id=*]/ipv4/forwarding-state`<br>- `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[type=ppp][id=*]/ipv6/pd/forwarding-state`<br>- `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[type=ppp][id=*]/ipv6/slaac/forwarding-state`<br>- `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/ingress/qos/statistics/out-profile-forwarded-octets`<br>- `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/egress/qos/statistics/out-exceed-profile-forwarded-octets`                                                                                                                                                 | Obtain detailed subscriber session and *QoS* information.                                                                                                                                                                                                                                                                                                    |
 
-# MAG Setup
+# MAG (BNG) Setup
 
-The topology below should repesent the *MAG*  testbed and it's key functional elements without observability stack since it's all living in the MGMT network.
+The topology below should represent the *MAG*  testbed and it's key functional elements without observability stack since it's all living in the MGMT network.
 
 ![Topology and Services](pic/Topology_and_Services.png)
 
@@ -237,7 +274,7 @@ The **CORE** router manages upstream subscriber traffic and maintains a connecti
 ## Key Components
 
 The following components represent the primary functional and observability elements in the **MAG** testbed setup:
-- **2 SROS MAG / BNG devices** We are using `bng1` and `bng2` as tragitional naming conventions here.
+- **2 SROS MAG / BNG devices** We are using `bng1` and `bng2` as traditional naming conventions here.
 - **1 Aggregation device** (`agg`): Subscriber-side connectivity
 - **1 Core device**: Manages upstream peering (e.g., High-Speed Internet services)
 - **1 BNG Blaster**: Traffic generator simulating 10 dual-stack PPPoE IPv4/IPv6 subscriber sessions
@@ -253,7 +290,7 @@ The following components represent the primary functional and observability elem
 - **1 gNMIc server**: Collects state data from BNG devices and forwards it to Fluent Bit
 - **1 FreeRadius server**: Provides AAA (Authentication, Authorization, and Accounting) functionalities
 
-# Getting Started
+# Quick Start
 
 In order to bring up the lab execute `sudo clab deploy`.
 
