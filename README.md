@@ -3,7 +3,10 @@
 # Introduction
 
 ## Overview
-This repository contains `clab` that implements *MAG-Integrated (Multi-Access Gateway) / BNG (Broadband Network Gateway)* test-bed and collects telemetry, events and state data from a *BNG*, aggregation and core network elements via *SROS MDM* interfaces and syslog channels. For the sake of simplicity, we are going to refer to the *BNG* as a *MAG* in this document, as a term reflecting better the modern nature of this NE Function in a network. The lab is designed to be used for demonstration and testing purposes only. It is not intended to be used in production environments.
+This repository contains `clab` that implements *MAG-Integrated (Multi-Access Gateway) / BNG (Broadband Network Gateway)* test-bed and collects telemetry, events and state data from a *BNG*, aggregation and core network elements via *SROS MDM* interfaces and syslog channels. For the sake of simplicity, we are going to refer to the *BNG* as a *MAG* in this document, as the term reflecting better the modern nature of this NE Function in a network. 
+
+The lab is designed to be used for demonstration and testing purposes only. It is not intended to be used in production environments.
+
 Our immediate objectives are to show how *MAG*  telemetry data can be collected and visualized using open-source tools such as `Prometheus`, `Grafana`, `Fluent Bit`, `Loki`, `gNMIc`, `Smokeping` and `Alertmanager`. The lab also includes a *BNG Blaster*, which is a traffic generator that can be used to generate traffic on the *MAG*  devices. The lab is designed to be easy to use and can be deployed using `Containerlab`.
 The goal is to create a simple observability concept solution for *MAG*  devices that can be used in lab environments and testbeds.
 For the full-blown solution please refer to the official Nokia representatives.
