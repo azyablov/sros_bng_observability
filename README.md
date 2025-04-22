@@ -1,11 +1,11 @@
-# SROS BNG Observability Lab
+# SROS MAG-Integrated / BNG Observability Lab
 
 # Introduction
 
 ## Overview
-This repository contains `clab` that implements *BNG* test-bed and collects telemetry, events and state data from a *BNG (Broadband Network Gateway)*, aggregation and core network elements via *SROS MDM* interfaces and syslog channels. 
-The our immediate objectives are to show how *BNG* telemetry data can be collected and visualized using open-source tools such as `Prometheus`, `Grafana`, `Fluent Bit`, `Loki`, `gNMIc`, `Smokeping` and `Alertmanager`. The lab also includes a *BNG Blaster*, which is a traffic generator that can be used to generate traffic on the *BNG* devices. The lab is designed to be easy to use and can be deployed using `Containerlab`.
-The goal is to create a simple observability concept solution for *BNG* devices that can be used in lab environments and test-beds.
+This repository contains `clab` that implements *MAG-Integrated (Multi-Access Gateway) / BNG (Broadband Network Gateway)* test-bed and collects telemetry, events and state data from a *BNG*, aggregation and core network elements via *SROS MDM* interfaces and syslog channels. For the sake of simplicity, we are going to refer to the *BNG* as a *MAG* in this document, as a term reflecting better the modern nature of this NE Function in a network. The lab is designed to be used for demonstration and testing purposes only. It is not intended to be used in production environments.
+Our immediate objectives are to show how *MAG*  telemetry data can be collected and visualized using open-source tools such as `Prometheus`, `Grafana`, `Fluent Bit`, `Loki`, `gNMIc`, `Smokeping` and `Alertmanager`. The lab also includes a *BNG Blaster*, which is a traffic generator that can be used to generate traffic on the *MAG*  devices. The lab is designed to be easy to use and can be deployed using `Containerlab`.
+The goal is to create a simple observability concept solution for *MAG*  devices that can be used in lab environments and testbeds.
 For the full-blown solution please refer to the official Nokia representatives.
 
 | <img src="pic/BNG_State_and_Redundancy.png" height="220" width="450"/> | <img src="pic/Subscriber_Inside.png" height="220" width="450"/> |
@@ -20,7 +20,7 @@ Let's move step by step via the principle and pillars, since every endeavor shou
 
 [Anton Zyablov](mailto:anton.zyablov@nokia.com) - Solution Architects Lead
 
-## Softare Versions
+## Software Versions
 
 | Software    | Version  |
 |-------------|----------|
@@ -40,7 +40,7 @@ Let's move step by step via the principle and pillars, since every endeavor shou
 
 ## Requirements
 
-In order to run this clab, you need to have the following installed:
+To run this clab, you need to have the following installed:
 - [Docker](https://docs.docker.com/get-docker/)
 - [Containerlab](https://containerlab.dev/getting-started/installation/)
 
@@ -53,11 +53,11 @@ Additional licenses and API tokens:
 
 ## Observability vs Monitoring
 
-Not the same as monitoring (practically collection and visualisation), so the aim of this setup is to provide observability of the *BNG* devices and the network elements connected to it. Observability is a measure of how well internal states of a system can be inferred from knowledge of its external outputs. In other words, observability is the ability to understand what is happening inside a system based on the data that is available from outside the system. Collection of everything creates a mess and makes observation and troubleshooting hard.
+Not the same as monitoring (practically collection and visualisation), so the aim of this setup is to provide observability of the *MAG*  devices and the network elements connected to it. Observability is a measure of how well internal states of a system can be inferred from knowledge of its external outputs. In other words, observability is the ability to understand what is happening inside a system based on the data that is available from outside the system. Collection of everything creates a mess and makes observation and troubleshooting hard.
 
 Our magic formula would be the following:
 
-**Observability** = **real-time onitoring of relevant metrics and states** + **context-rich dashboards** + **proactive view**. 
+**Observability** = **real-time monitoring of relevant metrics and states** + **context-rich dashboards** + **proactive view**. 
 
 ## What Should I Collect?
 
@@ -77,7 +77,7 @@ The observability stack should be able to collect the following data:
 
 While many of them are quite obvious, implementation may be not that easy.
 
-## The Three Pillars of Observability 
+## The three pillars of Observability 
 
 ### Logs
 
@@ -85,7 +85,7 @@ Records of events (often human-readable text) with timestamps.
 They are easy to generate and read. Provide granular details of events or transactions.
 Enable retrospective replay of incidents and can reveal errors/exceptions.
 
-***BNG use-case applicability:*** Practically it's our syslog messages, which are collected from the *NE* devices and sent to the syslog server. 
+***MAG use-case applicability:*** Practically it's our syslog messages, which are collected from the *NE* devices and sent to the syslog server. 
 
 
 ### Metrics and State
@@ -94,7 +94,7 @@ Numerical measurements (e.g., CPU/memory usage, response times) that track syste
 Great for detecting trends and setting alert thresholds.
 Offer a high-level view of performance (e.g., error rates, latency).
 
-***BNG use-case applicability:*** In case of network streaming telemetry we should consider sample and on-change depends on a semantic of the metric. Apart from that the state data is also important to collect, since it provides a context for the metrics. For example, if you have a saturation for the particular subscriber, you may want to know what was an IP address or the state of the *BNG* or link state.
+***MAG use-case applicability:*** In case of network streaming telemetry we should consider sample and on-change depends on a semantic of the metric. Apart from that the state data is also important to collect, since it provides a context for the metrics. For example, if you have a saturation for the particular subscriber, you may want to know what was an IP address or the state of the *MAG*  or link state.
 
 ### Traces
 
@@ -104,15 +104,15 @@ Provide context-specific details (e.g., which user made a request).
 Help debug distributed systems by correlating requests across different services.
 
 
-***BNG use-case applicability:*** Has this something to do with *BNG*? At the first glance no, but if we look deeper and start considering the whole network and distributed system, which is the case, then things like traffic path, apprearance of subcriber on the different NEs with relevant state and metrics data could be considered as a trace.
+***MAG use-case applicability:*** Has this something to do with *MAG* ? At the first glance no, but if we look deeper and start considering the whole network and distributed system, which is the case, then things like traffic path, apprearance of subcriber on the different NEs with relevant state and metrics data could be considered as a trace.
 
-# Alerting Pillars of BNG
+#  Alerting pillars of BNG
 
 What are the best practices to alert?
 Well, let's not reinvent a wheel again, since we have quite nice guidelines and best practices from  Niall Richard Murphy, Betsy Beyer, Chris Jones, Jennifer Petoff [Site Reliability Engineering](https://learning.oreilly.com/library/view/site-reliability-engineering/9781491929117/).
 Let's summarise here some key technical and operational aspects of the alerting process:
 
-1. Alert on the data (state and metrics) from *BNG* devices, CORE and Aggregation layer routers connected to Fixed Access NEs:
+1. Alert on the data (state and metrics) from *MAG*  devices, CORE and Aggregation layer routers connected to Fixed Access NEs:
    - High CPU usage and memory usage.
    - High latency: reach out an *NE*.
    - Links saturation.
@@ -121,10 +121,10 @@ Let's summarise here some key technical and operational aspects of the alerting 
    - High number of errors in logs.
    - Unexpected grow or drop in number sessions.
    - Approaching capacity / scalability limits.
-   - Multi-chassis state and loss or redundanc between *OLT* and Aggregation routers.
+   - Multi-chassis state and loss or redundancy between *OLT* and Aggregation routers.
    - Unexpected changes in number of routes.
    - Fluctuations on upstream *BGP* peering.
-   - General criteria applicable to moderm *IP/MPLS* networks.
+   - General criteria applicable to modern *IP/MPLS* networks.
 2. Alerts should be real: it should not be a false positive or a false negative.
 3. Alerts should be urgent: it should be sent to the right people at the right time.
 4. Alerts should be actionable: it should provide enough information to help the operator understand the issue and take appropriate action.
@@ -156,7 +156,7 @@ processors:
 Full gnmic configuration file to collect telemetry => [gnmic-metrics.yml](clab/sros_bng_observability/configs/gnmic/gnmic-metrics.yml)
 
 In case we are talking about somehing like *SRRP* state or *IPv4/IPv6* address it takes another way: `gNMIc` => `Fluent Bit` => `Loki` => `Grafana`.
-The corresponsing `gnmic` configs can be found below:
+The corresponding `gnmic` configs can be found below:
 ```yaml
 # Definitions of subscriptions
 subscriptions:
@@ -181,21 +181,21 @@ subscriptions:
       - "/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=*]/oper-state"
       - "/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=*]/master-since"
 ```
-Again sample and on-change remains relevant too, since we defentily should be aware when the state has been changed. 
-Sampling is required to and ensure the state is periodically verified for obeservability purposes and always present on the grafana dashboards in case an interval is a few minutes only.
+Again sample and on-change remains relevant too, since we definitely should be aware when the state has been changed. 
+Sampling is required to and ensure the state is periodically verified for observability purposes and always present on the grafana dashboards in case an interval is a few minutes only.
 The full `gnmic` configuration file to collect the state data => [gnmic-state.yml](clab/sros_bng_observability/configs/gnmic/gnmic-state.yml)
 
-The logs are collected via `syslog-ng` and sent to `Fluent Bit`, which is then sent to `Loki`. Such path is dicated by the need to convert [RFC3164](https://www.rfc-editor.org/rfc/rfc3164) syslog messages into [RFC5424](https://www.rfc-editor.org/rfc/rfc5424) format, which is required by `Fluent Bit`, which is in the bext turn feed it toward `Loki`.
+The logs are collected via `syslog-ng` and sent to `Fluent Bit`, which is then sent to `Loki`. Such path is dictated by the need to convert [RFC3164](https://www.rfc-editor.org/rfc/rfc3164) syslog messages into [RFC5424](https://www.rfc-editor.org/rfc/rfc5424) format, which is required by `Fluent Bit`, which is in the next turn feed it toward `Loki`.
 
 Availability monitoring is implemented via `ICMP`: `Smokeping` => `Prometheus` => `Grafana`. For now we are covering *MGMT* interface availability only.
-The `Smokeping` server is configured to ping the *BNG* devices and the aggregation device. The results are sent to `Prometheus`, which is then visualized in `Grafana`.
+The `Smokeping` server is configured to ping the *MAG*  devices and the aggregation device. The results are sent to `Prometheus`, which is then visualized in `Grafana`.
 Apart from that additional alerting rules and Heatmap were added to verify if `NEs` are available via *gNMI MDM* interface.
 Alerting rules are configured to send alerts to the `Alertmanager` server, which is then sent to the Telegram channel (check for the telegram token). 
-This is done for the illustartive purposes and could be adjusted per need and requirements realively easily.
+This is done for the illustrative purposes and could be adjusted per need and requirements relatively easily.
 
 As *NetOps* and *DevOps* pracititioners we should consider limits and scalability of the solution. The current setup is designed to be scalable and can be easily extended to support more devices and services.
 But we should remember about limits on *NE* side to support number of subscriptions and number of sessions. The telemetry stack scaling should be cosidered as well as more network elements and data is been colleceted.
-This is especially relevant *BNG* where you can't simply pull everything for hundreds of thousands of subscribers at the same time, but we are going to discuss it in the next session in a bit greater details.
+This is especially relevant *MAG*  where you can't simply pull everything for hundreds of thousands of subscribers at the same time, but we are going to discuss it in the next session in a bit greater detail.
 
 ## What and Why to collect?
 
@@ -204,47 +204,37 @@ This is especially relevant *BNG* where you can't simply pull everything for hun
 | CPU                              | - `/state/system/cpu[sample-period=60]/summary/usage`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |                                                                                                                                                                                                                                                                                                                                                             |
 | Memory                           | - `/state/system/memory-pools/summary/available-memory`<br>- `/state/system/memory-pools/summary/current-total-size`<br>- `/state/system/memory-pools/summary/total-in-use`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Memory usage is calculated as %<br>Memory usage depends on the application (e.g., *RR* has high memory consumption)<br>Alert when above 90%                                                                                                                                                                                                                   |
 | *PPP* Session                      | - `/state/subscriber-mgmt/statistics/sessions[counter=ppp-sessions-total-established]/current-value`<br>- `/state/subscriber-mgmt/statistics/total-hosts[counter=ipv4]`<br>- `/state/subscriber-mgmt/statistics/total-hosts[counter=ipv6]`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Important to monitor. Too much fluctuation would point to a problem.                                                                                                                                                                                                                                                                                        |
-| Hardware<br>Resources            | - `/state/card[slot-number=1]/fp[fp-number=1]/resource-usage/egress-queues`<br>- `/state/card[slot-number=1]/fp[fp-number=1]/resource-usage/ingress-policers`<br>- `/state/card[slot-number=1]/mda[mda-slot=1]/resource-usage/sap-instances`<br>- `/state/system/resource-usage/subscriber-next-hop-entries`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Important to monitor in scaled deployments.<br>Depleted resource can indicate a configuration error or that *BNG* has reached its capacity.<br>Since additional capacity deployment takes time, monitor its trajectory and implications for deployment plans. Resource depletion means no new subscriber sessions.                                             |
-| *SRRP*                             | - `/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=1]/statistics/advertisement-interval-errors`<br>- `/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=1]/statistics/advertisement-interval-discards`<br>- `/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=1]/statistics/master-changes`<br>- `/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=1]/statistics/become-master`<br>- `/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=1]/statistics/become-non-master` | It is important to know which *BNG* is active for each *Group Interface*, especially when each *BNG* acts as master for half of the *Group Interfaces* (active/active redundancy).                                                                                                                                                                                  |
+| Hardware<br>Resources            | - `/state/card[slot-number=1]/fp[fp-number=1]/resource-usage/egress-queues`<br>- `/state/card[slot-number=1]/fp[fp-number=1]/resource-usage/ingress-policers`<br>- `/state/card[slot-number=1]/mda[mda-slot=1]/resource-usage/sap-instances`<br>- `/state/system/resource-usage/subscriber-next-hop-entries`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Important to monitor in scaled deployments.<br>Depleted resource can indicate a configuration error or that *MAG*  has reached its capacity.<br>Since additional capacity deployment takes time, monitor its trajectory and implications for deployment plans. Resource depletion means no new subscriber sessions.                                             |
+| *SRRP*                             | - `/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=1]/statistics/advertisement-interval-errors`<br>- `/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=1]/statistics/advertisement-interval-discards`<br>- `/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=1]/statistics/master-changes`<br>- `/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=1]/statistics/become-master`<br>- `/state/service/vprn[service-name=BNG-INTERNET]/subscriber-interface[interface-name=SUB]/group-interface[group-interface-name=GRP_1]/srrp[srrp-id=1]/statistics/become-non-master` | It is important to know which *MAG*  is active for each *Group Interface*, especially when each *MAG*  acts as master for half of the *Group Interfaces* (active/active redundancy).                                                                                                                                                                                  |
 | Port and Interface<br>Statistics | - `/state/router[router-name=*]/interface[interface-name=*]/statistics/ip/in-octets`<br>- `/state/router[router-name=*]/interface[interface-name=*]/statistics/ip/out-octets`<br>- `/state/router[router-name=*]/interface[interface-name=*]/statistics/mpls/in-octets`<br>- `/state/router[router-name=*]/interface[interface-name=*]/statistics/mpls/out-octets`<br>- `/state/port[port-id=*]/ethernet/statistics/in-octets`<br>- `/state/port[port-id=*]/ethernet/statistics/out-octets`<br>- `/state/port[port-id=*]/ethernet/statistics/in-utilization`<br>- `/state/port[port-id=*]/ethernet/statistics/out-utilization`<br>- `/state/port[port-id=*]/oper-state`<br>- `/state/port[port-id=*]/ethernet/statistics/in-errors`<br>- `/state/port[port-id=*]/ethernet/statistics/out-errors`                                                                                                                                                                | Port and interface statistics are critical for monitoring, troubleshooting, and capacity planning.                                                                                                                                                                                                                                                           |
 | Per Subscriber<br>Info           | - `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[type=ppp][id=*]/up-time`<br>- `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[type=ppp][id=*]/ipv4/forwarding-state`<br>- `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[type=ppp][id=*]/ipv6/pd/forwarding-state`<br>- `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/session[type=ppp][id=*]/ipv6/slaac/forwarding-state`<br>- `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/ingress/qos/statistics/out-profile-forwarded-octets`<br>- `/state/subscriber-mgmt/subscriber[subscriber-id=*]/sla-profile-instance[id=*]/egress/qos/statistics/out-exceed-profile-forwarded-octets`                                                                                                                                                 | Obtain detailed subscriber session and *QoS* information.                                                                                                                                                                                                                                                                                                    |
 
+# MAG Setup
 
-## What's the next? (Our TODO List)
-
-While we are tyring to release the first version of the lab, a number of things are in our TODO list:
-- Alerts on: scalability limits, CPU, memory, latency, packet loss, errors in logs, errors on interfaces, errors on BNG sessions.
-- Alerts on: unexpected changes in number of routes, unexpected grow or drop in number sessions, high number of errors in logs.
-- Alerts on: high number of errors in logs, unexpected changes in number of routes, unexpected grow or drop in number sessions.
-- OAM dashboards and alerts.
-- Subscriber traceability.
-
-# BNG Setup
-
-The topology below should repesent the *BNG* testbed and it's key functional elements without observability stack since it's all living in the MGMT network.
+The topology below should repesent the *MAG*  testbed and it's key functional elements without observability stack since it's all living in the MGMT network.
 
 ![Topology and Services](pic/Topology_and_Services.png)
 
-The setup comprises two redundant **BNGs** serving a small number of simulated users in a straightforward network topology. The **AGG**, **BNGs**, and **CORE** routers all use **ISIS** for routing and **SR-MPLS** for tunneling.
+The setup comprises two redundant **MAGs** serving a small number of simulated users in a straightforward network topology. The **AGG**, **MAGs**, and **CORE** routers all use **ISIS** for routing and **SR-MPLS** for tunneling.
 
 **BNG Blaster** simulates subscribers by initiating dual-stack (**IPv4**/**IPv6**) **PPPoE** sessions. Subscriber traffic is transmitted to the **AGG** router via an **Access Interface**.
 
-A service topology is depicted at the top of the diagram, employing a combination of **EVPN** and **L3VPN** services interconnected via **PXC**. On the **AGG** router, an **EVPN-VPLS** instance receives subscriber traffic and broadcasts **PPP** session initiation (**PADI**) requests to the **BNGs**.
+A service topology is depicted at the top of the diagram, employing a combination of **EVPN** and **L3VPN** services interconnected via **PXC**. On the **AGG** router, an **EVPN-VPLS** instance receives subscriber traffic and broadcasts **PPP** session initiation (**PADI**) requests to the **MAGs**.
 
-The two **BNGs** function in an active/standby redundancy model. Only the active **BNG** responds to **PADI** messages. The redundancy mechanism is managed using the **SRRP** protocol, which elects the active **BNG**. Both **BNGs** are interconnected through a **Redundant Interface** running over the **MPLS** network. The **Redundant Interface** ensures that traffic can always reach the active **BNG**, even if the standby **BNG** receives downstream traffic due to transient network conditions or misconfigurations.
+The two **MAGs** function in an active/standby redundancy model. Only the active **MAG** responds to **PADI** messages. The redundancy mechanism is managed using the **SRRP** protocol, which elects the active **MAG**. Both **MAGs** are interconnected through a **Redundant Interface** running over the **MPLS** network. The **Redundant Interface** ensures that traffic can always reach the active **MAG**, even if the standby **MAG** receives downstream traffic due to transient network conditions or misconfigurations.
 
-All session-related information (such as subscriber **Profiles**, **QoS settings**, and **DHCP leases**) is synchronized continuously to the standby **BNG**.
+All session-related information (such as subscriber **Profiles**, **QoS settings**, and **DHCP leases**) is synchronized continuously to the standby **MAG**.
 
-A **RADIUS** server provides the **AAA** (Authentication, Authorization, and Accounting) services. The active **BNG** authenticates incoming access requests with the **RADIUS** server, which responds with necessary attributes defining subscriber profiles and associated **DHCP Pool Names**. Upon successful authentication, the active **BNG** allocates session resources and coordinates with the **PPP client** to establish the session. IP address assignment is managed locally by the **DHCP Server** on the **BNG**.
+A **RADIUS** server provides the **AAA** (Authentication, Authorization, and Accounting) services. The active **MAG** authenticates incoming access requests with the **RADIUS** server, which responds with necessary attributes defining subscriber profiles and associated **DHCP Pool Names**. Upon successful authentication, the active **MAG** allocates session resources and coordinates with the **PPP client** to establish the session. IP address assignment is managed locally by the **DHCP Server** on the **MAG**.
 
-Both **BNGs** advertise aggregated subscriber prefixes to the **CORE**. Prefix states are tracked using **SRRP**, enabling each **BNG** to determine its state (active or standby) for a given prefix. Routes advertised toward the **CORE** from the active **BNG** have a higher **BGP Local Preference** (150). In contrast, the standby **BNG** advertises routes with a standard local preference (100).
+Both **MAGs** advertise aggregated subscriber prefixes to the **CORE**. Prefix states are tracked using **SRRP**, enabling each **MAG** to determine its state (active or standby) for a given prefix. Routes advertised toward the **CORE** from the active **MAG** have a higher **BGP Local Preference** (150). In contrast, the standby **MAG** advertises routes with a standard local preference (100).
 
 The **CORE** router manages upstream subscriber traffic and maintains a connection back to **BNG Blaster** to complete the loop. **BNG Blaster** receives traffic initially transmitted from the **Access Interface**.
 
 ## Key Components
 
-The following components represent the primary functional and observability elements in the **BNG** testbed setup:
-- **2 SROS BNG devices** (`bng1` and `bng2`)
+The following components represent the primary functional and observability elements in the **MAG** testbed setup:
+- **2 SROS MAG / BNG devices** We are using `bng1` and `bng2` as tragitional naming conventions here.
 - **1 Aggregation device** (`agg`): Subscriber-side connectivity
 - **1 Core device**: Manages upstream peering (e.g., High-Speed Internet services)
 - **1 BNG Blaster**: Traffic generator simulating 10 dual-stack PPPoE IPv4/IPv6 subscriber sessions
