@@ -116,6 +116,9 @@ topology:
       kind: linux
       image: quay.io/prometheus/alertmanager:v0.28.1
       mgmt-ipv4: 172.20.20.35
+      env:
+        http_proxy: ${HTTP_PROXY} # Update with your proxy, if not direct access to the Internet
+        https_proxy: ${HTTPS_PROXY} # Update with your proxy, if not direct access to the Internet
       binds:
         - configs/alertmanager.yml:/alertmanager.yml
         - configs/telegram_bot.token:/telegram_bot.token
