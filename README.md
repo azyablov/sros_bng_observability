@@ -294,10 +294,11 @@ The following components represent the primary functional and observability elem
 
 # Quick Start
 
-In order to bring up the lab execute `sudo clab deploy`.
+In order to bring up the lab execute `sudo clab deploy`. Use `sudo -E` to preserve your environment variables, such as `HTTP_PROXY`. 
+Please check for a proxy server if you have no direct connection to the Internet!
 
 ```bash
-❯ sudo clab deploy
+❯ sudo -E clab deploy
 15:23:47 INFO Containerlab started version=0.67.0
 15:23:47 INFO Parsing & checking topology file=bngt.clab.yaml
 15:23:47 INFO Pulling quay.io/prometheus/prometheus:v2.53.4 Docker image
