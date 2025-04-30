@@ -297,6 +297,14 @@ The following components represent the primary functional and observability elem
 In order to bring up the lab execute `sudo clab deploy`. Use `sudo -E` to preserve your environment variables, such as `HTTP_PROXY`. 
 Please check for a proxy server if you have no direct connection to the Internet!
 
+The lab setup assumes prometheus and loki data is kept persistent across lab runs, so in order to make it correctly you should adjust permissions for the directories where prometheus and loki data is stored. 
+```bash
+sudo chmod o+w promdata
+sudo chmod o+w lokidata
+```
+
+The lab is designed to be run with `sudo` privileges:
+
 ```bash
 ❯ sudo -E clab deploy
 15:23:47 INFO Containerlab started version=0.67.0
@@ -419,7 +427,7 @@ Please check for a proxy server if you have no direct connection to the Internet
 Then it's a time to let in your subscribers by running *BNG Blaster*, just execute following command:
 
 ```bash
-docker exec -it clab-sros_bngt-bngblaster bash
+sudo docker exec -it clab-sros_bngt-bngblaster bash
 ```
 
 Then, you can run the following command to generate traffic:
@@ -430,7 +438,7 @@ bngblaster -C pppoe.json -I -l dhcp
 OR do it in one go:
 
 ```bash
-docker exec -it clab-sros_bngt-bngblaster bash -c 'bngblaster -C pppoe.json -I -l dhcp'
+sudo docker exec -it clab-sros_bngt-bngblaster bash -c 'bngblaster -C pppoe.json -I -l dhcp'
 ```
 
 Then you can perform SSH port forwarding to your remote machine toward ro connect locally to `clab-sros_bngt-tel-graf:3000` and voilà... your nice dashboards are ready to use.
